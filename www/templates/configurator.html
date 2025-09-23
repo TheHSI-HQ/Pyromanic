@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="{{base}}/res/css/configurator.css" />
+    <script src="{{base}}/res/js/js-yaml.min.js"></script>
+
+    <title>{{ title }}</title>
+  </head>
+  <body>
+    <div class="container">
+        <div class="config-title">Pyromanic {{ cfg['version'] }}</div>
+        <div class="config-subtitle">Configurator</div>
+        <div class="options">
+            <div class="entry">
+                <div class="info">
+                    <div class="title">Enabled</div>
+                    <div class="path">enabled</div>
+                    <div class="default">True</div>
+                    <div class="description">Enable Pyromanic</div>
+                </div>
+                <div class="config">
+                    <select title="enabled" name="enabled" id="cfg-enabled">
+                        <option value="true" {% if cfg["enabled"] %}selected{% endif %}>True</option>
+                        <option value="false" {% if not cfg["enabled"] %}selected{% endif %}>False</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="entry">
+                <div class="info">
+                    <div class="title">App / Name</div>
+                    <div class="path">app.branding.name</div>
+                    <div class="default">default</div>
+                    <div class="description">The Branding Name of your App</div>
+                </div>
+                <div class="config">
+                    <input title="app-name" name="app-name" id="cfg-app.branding.name" value="{{ cfg["app"]["branding"]["name"] }}">
+                </div>
+            </div>
+
+            <div class="entry">
+                <div class="info">
+                    <div class="title">App / Icon</div>
+                    <div class="path">app.branding.icon</div>
+                    <div class="default">passthrough</div>
+                    <div class="description">The Icon of your App</div>
+                </div>
+                <div class="config">
+                    <datalist id="data-app.branding.icon">
+                        <option value="default"></option>
+                        <option value="passthrough"></option>
+                        <option value="[URL]"></option>
+                    </datalist>
+                    <input title="app-icon" name="app-icon" id="cfg-app.branding.icon" list="data-app.branding.icon" value="{{ cfg["app"]["branding"]["icon"] }}">
+                </div>
+            </div>
+
+            <div class="entry">
+                <div class="info">
+                    <div class="title">App / Base Path</div>
+                    <div class="path">app.base_path</div>
+                    <div class="default">/pyro</div>
+                    <div class="description">The Web Base Path of Pyromanic</div>
+                </div>
+                <div class="config">
+                    <input title="app-base-path" name="app-base-path" id="cfg-app.base_path" value="{{ cfg["app"]["base_path"] }}">
+                </div>
+            </div>
+
+            <div class="entry">
+                <div class="info">
+                    <div class="title">Proxy / Remote IP Header</div>
+                    <div class="path">proxy.remote_ip_header</div>
+                    <div class="default">X-Forwarded-For</div>
+                    <div class="description">What Headers the Proxy should set to the Request Initiators IP</div>
+                </div>
+                <div class="config">
+                    <div class="config-multiinput" id="cfg-proxy.remote_ip_header">
+                        {% if cfg["proxy"]["remote_ip_header"] %}
+                            <script>
+                                document.currentScript.parentElement.value = ["{{ '", "'.join(cfg["proxy"]["remote_ip_header"]) }}"];
+                                document.currentScript.remove()
+                            </script>
+                        {% endif %}
+                        <input class="config-multiinput-input" type="text" placeholder="Add item...">
+                        <ul class="config-multiinput-list"></ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="entry">
+                <div class="info">
+                    <div class="title">Skip / X-Pyromanic Header</div>
+                    <div class="path">proxy.skip_x-pyromanic</div>
+                    <div class="default">False</div>
+                    <div class="description">Skips adding the X-Pyromanic Header to Requests from the Client</div>
+                </div>
+                <div class="config">
+                    <select title="enabled" name="enabled" id="cfg-proxy.skip_x-pyromanic">
+                        <option value="true" {% if cfg["proxy"]["skip_x-pyromanic"] %}selected{% endif %}>True</option>
+                        <option value="false" {% if not cfg["proxy"]["skip_x-pyromanic"] %}selected{% endif %}>False</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="entry">
+                <div class="info">
+                    <div class="title">Proxy / Additional Data</div>
+                    <div class="path">proxy.additional_data</div>
+                    <div class="default">Empty</div>
+                    <div class="description">Data the Proxy should add to Requests from the Client</div>
+                </div>
+                <dialog id="cfg-proxy.additional_data-dialog">
+                    <label for="cfg-proxy.additional_data-type">Type:</label>
+                    <select id="cfg-proxy.additional_data-type">
+                        <option value="header">Header</option>
+                        <option value="parameter">Parameter</option>
+                    </select><br>
+                    <label for="cfg-proxy.additional_data-key">Key:</label>
+                    <input id="cfg-proxy.additional_data-key"><br>
+                    <label for="cfg-proxy.additional_data-value">Value:</label>
+                    <input id="cfg-proxy.additional_data-value"><br>
+                    <button onclick="addProxyAdditionalData()">Add</button>
+                    <button onclick="document.getElementById('cfg-proxy.additional_data-dialog').close()">Abort</button>
+                </dialog>
+                <font color="red"><b>FIX ME</b></font>
+                <div class="config">
+                    <div class="config-display" id="cfg-proxy.additional_data">
+                        <ul class="config-display-list"></ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="entry">
+                <div class="info">
+                    <div class="title">Proxy / Strip Headers</div>
+                    <div class="path">proxy.strip_headers</div>
+                    <div class="default">Empty</div>
+                    <div class="description">What Headers the Proxy should remove from Requests by the Client</div>
+                </div>
+                <div class="config">
+                    <div class="config-multiinput" id="cfg-proxy.strip_headers">
+                        {% if cfg["proxy"]["strip_headers"] %}
+                            <script>
+                                document.currentScript.parentElement.value = {{ cfg["proxy"]["strip_headers"]|safe }};
+                                document.currentScript.remove()
+                            </script>
+                        {% endif %}
+                        <input class="config-multiinput-input" type="text" placeholder="Add item...">
+                        <ul class="config-multiinput-list"></ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="entry">
+                <div class="info">
+                    <div class="title">Proxy / Allowed Method</div>
+                    <div class="path">proxy.allowed_methods</div>
+                    <div class="default">GET, HEAD, OPTIONS, TRACE</div>
+                    <div class="description">What Methods the Proxy should forward</div>
+                </div>
+                <div class="config">
+                    <datalist id="data-proxy.allowed_methods">
+                        <option value="GET"></option>
+                        <option value="HEAD"></option>
+                        <option value="POST"></option>
+                        <option value="PUT"></option>
+                        <option value="DELETE"></option>
+                        <option value="CONNECT"></option>
+                        <option value="OPTIONS"></option>
+                        <option value="TRACE"></option>
+                        <option value="PATCH"></option>
+                    </datalist>
+                    <div class="config-multiinput" id="cfg-proxy.allowed_methods">
+                        {% if cfg["proxy"]["allowed_methods"] %}
+                            <script>
+                                document.currentScript.parentElement.value = {{ cfg["proxy"]["allowed_methods"] |safe}};
+                                document.currentScript.remove()
+                            </script>
+                        {% endif %}
+                        <input class="config-multiinput-input" list="data-proxy.allowed_methods" type="text" placeholder="Add item...">
+                        <ul class="config-multiinput-list"></ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="entry">
+                <div class="info">
+                    <div class="title">Proxy / Client IP Method</div>
+                    <div class="path">proxy.remote_ip_method</div>
+                    <div class="default">source</div>
+                    <div class="description">Where to obtain Clients IP From</div>
+                </div>
+                <div class="config">
+                    <datalist id="data-proxy.remote_ip_method">
+                        <option value="source"></option>
+                        <option value="header[X-Header-Name]"></option>
+                        <option value="parameter[url-parameter]"></option>
+                        <option value="url"></option>
+                    </datalist>
+                    <input title="proxy-remote_ip_method" name="proxy-remote_ip_method" id="cfg-proxy.remote_ip_method" list="data-proxy.remote_ip_method" value="{{ cfg["proxy"]["remote_ip_method"] }}">
+                </div>
+            </div>
+
+            <div class="entry">
+                <div class="info">
+                    <div class="title">Proxy / No Modify</div>
+                    <div class="path">proxy.no_modify</div>
+                    <div class="default">False</div>
+                    <div class="description">Prevents the Proxy from changing the Request</div>
+                </div>
+                <div class="config">
+                    <select title="enabled" name="enabled" id="cfg-proxy.no_modify">
+                        <script>
+                            document.currentScript.parentElement.addEventListener("change", (e) => {
+                                if (e.target.value=="false" && document.getElementById("cfg-proxy.strict_no_modify").value=="true")
+                                    document.getElementById("cfg-proxy.strict_no_modify").value = "false";
+                            })
+                        </script>
+                        <option value="true" {% if cfg["proxy"]["no_modify"] %}selected{% endif %}>True</option>
+                        <option value="false" {% if not cfg["proxy"]["no_modify"] %}selected{% endif %}>False</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="entry">
+                <div class="info">
+                    <div class="title">Proxy / Strict No Modify</div>
+                    <div class="path">proxy.strict_no_modify</div>
+                    <div class="default">False</div>
+                    <div class="description">Prevents the Proxy from making any changes to the Request</div>
+                </div>
+                <div class="config">
+                    <select title="enabled" name="enabled" id="cfg-proxy.strict_no_modify">
+                        <script>
+                            document.currentScript.parentElement.addEventListener("change", (e) => {
+                                if (e.target.value=="true" && document.getElementById("cfg-proxy.no_modify").value=="false")
+                                    document.getElementById("cfg-proxy.no_modify").value = "true";
+                            })
+                        </script>
+                        <option value="true" {% if cfg["proxy"]["strict_no_modify"] %}selected{% endif %}>True</option>
+                        <option value="false" {% if not cfg["proxy"]["strict_no_modify"] %}selected{% endif %}>False</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="entry">
+                <div class="info">
+                    <div class="title">Proxy / Web Root</div>
+                    <div class="path">proxy.web_root</div>
+                    <div class="default">http://localhost:5000/</div>
+                    <div class="description">The Root of the Proxy Target</div>
+                </div>
+                <div class="config">
+                    <input title="proxy-web_root" name="proxy-web_root" id="cfg-proxy.web_root" value="{{ cfg["proxy"]["web_root"] }}">
+                </div>
+            </div>
+
+            <div class="entry">
+                <div class="info">
+                    <div class="title">Privacy / Log IPs</div>
+                    <div class="path">privacy.log_ips</div>
+                    <div class="default">True</div>
+                    <div class="description">Whether to Log IPs or Not</div>
+                </div>
+                <div class="config">
+                    <select title="privacy-log_ips" name="privacy-log_ips" id="cfg-privacy.log_ips">
+                        <option value="true" {% if cfg["privacy"]["log_ips"] %}selected{% endif %}>True</option>
+                        <option value="false" {% if not cfg["privacy"]["log_ips"] %}selected{% endif %}>False</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="entry">
+                <div class="info">
+                    <div class="title">Cache / Enabled</div>
+                    <div class="path">cache.enabled</div>
+                    <div class="default">True</div>
+                    <div class="description">Should the Server Cache generated (Not Proxied) Content</div>
+                </div>
+                <div class="config">
+                    <select title="cache-enabled" name="cache-enabled" id="cfg-cache.enabled">
+                        <option value="true" {% if cfg["cache"]["enabled"] %}selected{% endif %}>True</option>
+                        <option value="false" {% if not cfg["cache"]["enabled"] %}selected{% endif %}>False</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="entry">
+                <div class="info">
+                    <div class="title">Cache / Duration</div>
+                    <div class="path">cache.duration</div>
+                    <div class="default">900</div>
+                    <div class="description">How long the Server should keep Cached Content (Seconds)</div>
+                </div>
+                <div class="config">
+                    <input type="number" min=0 max=2147483647 value={{ cfg["cache"]["duration"] }} id="cfg-cache.duration">
+                </div>
+            </div>
+
+            <div class="entry">
+                <div class="info">
+                    <div class="title">HTTP / Enabled</div>
+                    <div class="path">http.enabled</div>
+                    <div class="default">True</div>
+                    <div class="description">Is HTTP Server Enabled</div>
+                </div>
+                <div class="config">
+                    <select title="http-enabled" name="http-enabled" id="cfg-http.enabled">
+                        <option value="true" {% if cfg["http"]["enabled"] %}selected{% endif %}>True</option>
+                        <option value="false" {% if not cfg["http"]["enabled"] %}selected{% endif %}>False</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="entry">
+                <div class="info">
+                    <div class="title">HTTP / Port</div>
+                    <div class="path">http.port</div>
+                    <div class="default">80</div>
+                    <div class="description">HTTP Server Port</div>
+                </div>
+                <div class="config">
+                    <input type="number" min=1 max=65535 value={{ cfg["http"]["port"] }} id="cfg-http.port">
+                </div>
+            </div>
+
+            <div class="entry">
+                <div class="info">
+                    <div class="title">HTTP / Host</div>
+                    <div class="path">http.host</div>
+                    <div class="default">0.0.0.0</div>
+                    <div class="description">HTTP Server Host</div>
+                </div>
+                <div class="config">
+                    <input title="http-host" name="http-host" id="cfg-http.host" value="{{ cfg["http"]["host"] }}">
+                </div>
+            </div>
+
+            <div class="entry">
+                <div class="info">
+                    <div class="title">HTTPS / Enabled</div>
+                    <div class="path">https.enabled</div>
+                    <div class="default">True</div>
+                    <div class="description">Is HTTPS Server Enabled</div>
+                </div>
+                <div class="config">
+                    <select title="https-enabled" name="https-enabled" id="cfg-https.enabled">
+                        <option value="true" {% if cfg["https"]["enabled"] %}selected{% endif %}>True</option>
+                        <option value="false" {% if not cfg["https"]["enabled"] %}selected{% endif %}>False</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="entry">
+                <div class="info">
+                    <div class="title">HTTPS / AdHoc</div>
+                    <div class="path">https.adhoc</div>
+                    <div class="default">True</div>
+                    <div class="description">Use insecure SSL/TLS for HTTPS Server </div>
+                </div>
+                <div class="config">
+                    <select title="https-adhoc" name="https-adhoc" id="cfg-https.adhoc">
+                        <option value="true" {% if cfg["https"]["adhoc"] %}selected{% endif %}>True</option>
+                        <option value="false" {% if not cfg["https"]["adhoc"] %}selected{% endif %}>False</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="entry">
+                <div class="info">
+                    <div class="title">HTTPS / Certificate</div>
+                    <div class="path">https.certificate</div>
+                    <div class="default">./server.crt</div>
+                    <div class="description">HTTPS Server Certificate Path</div>
+                </div>
+                <div class="config">
+                    <input title="https-certificate" name="https-certificate" id="cfg-https.certificate" value="{{ cfg["https"]["certificate"] }}">
+                </div>
+            </div>
+
+            <div class="entry">
+                <div class="info">
+                    <div class="title">HTTPS / Private Key</div>
+                    <div class="path">https.private_key</div>
+                    <div class="default">server.key</div>
+                    <div class="description">HTTPS Server Private Key Path</div>
+                </div>
+                <div class="config">
+                    <input title="https-private_key" name="https-private_key" id="cfg-https.private_key" value="{{ cfg["https"]["private_key"] }}">
+                </div>
+            </div>
+
+            <div class="entry">
+                <div class="info">
+                    <div class="title">HTTPS / Port</div>
+                    <div class="path">https.port</div>
+                    <div class="default">443</div>
+                    <div class="description">HTTPS Server Port</div>
+                </div>
+                <div class="config">
+                    <input type="number" min=1 max=65535 value={{ cfg["https"]["port"] }} id="cfg-https.port">
+                </div>
+            </div>
+
+            <div class="entry">
+                <div class="info">
+                    <div class="title">HTTPS / Host</div>
+                    <div class="path">https.host</div>
+                    <div class="default">0.0.0.0</div>
+                    <div class="description">HTTPS Server Host</div>
+                </div>
+                <div class="config">
+                    <input title="https-host" name="https-host" id="cfg-https.host" value="{{ cfg["https"]["host"] }}">
+                </div>
+            </div>
+            <textarea id="exported" class="exported-config" readonly></textarea>
+            <div class="spacer">
+        </div>
+        <div class="emblem">
+            <div class="emblem-text">Developed by</div>
+            <a
+                href="https://www.thehsi.cloud/"
+                target="_blank"
+                rel="noopener"
+                class="emplem-link"
+                tabindex="-1"
+                >TheHSI</a
+            >
+            <div class="emblem-logo"></div>
+        </div>
+    </div>
+</body>
+<script>
+    document.querySelectorAll("input[type=number]").forEach((e) => {
+    e.addEventListener("change", () => {
+        e.value=Math.min(Math.max(e.value,e.min),e.max)
+    })})
+    function toNestedObject(pairs) {
+        const result = {};
+        for (const [key, value] of pairs) {
+            const parts = key.split('.');
+            let cur = result;
+            parts.forEach((part, idx) => {
+                if (idx === parts.length - 1) {
+                    // last part: assign value
+                    nre = new RegExp("[0-9]+");
+                    if (value == "true" | value == "false") {
+                        cur[part] = value == "true";
+                        return
+                    }
+                    number_match = nre.exec(value)
+                    if (number_match)
+                        if (number_match[0]==number_match.input) {
+                            cur[part] = parseInt(value);
+                            return
+                        }
+                    cur[part] = value;
+                } else {
+                    // intermediate: ensure object
+                    if (!(part in cur)) cur[part] = {};
+                    cur = cur[part];
+                }
+            });
+        }
+        return result;
+    }
+    function compileConfig() {
+        return toNestedObject(
+            Array.from(
+                document.querySelectorAll(".entry")
+            ).map(e => [
+                    e.querySelector(".path").textContent,
+                    document.getElementById(
+                        "cfg-" + e.querySelector(".path").textContent
+                    ).value
+                ]
+            )
+        )
+    }
+    function dumpConfig() {
+        document.getElementById("exported").value=jsyaml.dump(compileConfig())
+    }
+    function addProxyAdditionalData() {
+        let type = document.getElementById("cfg-proxy.additional_data-type").value;
+        let key = document.getElementById("cfg-proxy.additional_data-key").value;
+        let value = document.getElementById("cfg-proxy.additional_data-value").value;
+        let data = {type: type, key: key, value: value};
+        console.log(data);
+        document.getElementById('cfg-proxy.additional_data-dialog').close()
+    }
+
+    document.querySelectorAll('.config-multiinput').forEach(block => {
+        const input = block.querySelector('.config-multiinput-input');
+        const ul = block.querySelector('.config-multiinput-list');
+        if (!block.value) block.value = [];
+
+        function render() {
+            ul.innerHTML = '';
+            block.value.forEach((val, i) => {
+            const li = document.createElement('li');
+            li.textContent = val;
+            li.onclick = () => {
+                block.value.splice(i, 1);
+                render();
+            };
+            ul.appendChild(li);
+            });
+        }
+
+        input.addEventListener('keydown', e => {
+            if (e.key === 'Enter' && input.value.trim() !== '') {
+                block.value.push(input.value.trim());
+                input.value = '';
+                render();
+            }
+        });
+        render();
+    });
+    document.querySelectorAll('.config-display').forEach(block => {
+        const ul = block.querySelector('.config-display-list');
+        if (!block.value) block.value = [];
+
+        function render() {
+            ul.innerHTML = '';
+            block.value.forEach((val, i) => {
+            const li = document.createElement('li');
+            li.textContent = val;
+            li.onclick = () => {
+                block.value.splice(i, 1);
+                render();
+            };
+            ul.appendChild(li);
+            });
+        }
+
+        block.render = render;
+        render();
+    });
+    dumpConfig();
+    setInterval(dumpConfig, 2500)
+</script>
+</html>

@@ -1,0 +1,228 @@
+body {
+  background-image: url("<<base>>/res/img/background-1080pHD.img");
+  background-size: cover;
+  background-position: center center;
+  background-repeat: no-repeat;
+  height: auto;
+  overflow-x: hidden;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+  color: white;
+  margin: 0;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+  border-bottom: 2px white dotted;
+}
+
+.hidden {
+  display: none;
+}
+
+.emblem {
+  position: fixed;
+  top: 100%;
+  left: 100%;
+  transform: translate(calc(-100% - 10px), calc(-100% - 10px));
+  font-size: 1em;
+  display: block;
+  width: 500px;
+  text-align: right;
+  font-weight: 600;
+  color: black;
+}
+
+.emblem>* {
+  display: inline-block;
+}
+
+.emblem>.emblem-logo {
+  background-image: url(https://thehsi.cloud/favicon.ico);
+  height: 1em;
+  width: 1em;
+  padding: 5px;
+  background-size: cover;
+  top: 7px;
+  position: relative;
+  cursor: pointer;
+}
+
+.spacer {
+  padding-bottom: 60px;
+}
+
+.container {
+  position: relative;
+  padding: 20px;
+  top: 0;
+  left: 0;
+  width: calc(100vw - 40px);
+  height: auto;
+  background-color: rgba(0, 0, 0, 0.2);
+  padding-bottom: 0;
+  margin: 0;
+}
+
+.config-title {
+  font-size: 3em;
+  font-weight: 700;
+}
+
+.config-subtitle {
+  font-size: 1.5em;
+  font-weight: 700;
+}
+
+.options {
+  margin-top: 10px;
+}
+
+.entry {
+  -webkit-backdrop-filter: blur(5px);
+  backdrop-filter: blur(5px);
+  background-color: rgba(0, 0, 0, 0.2);
+  border-radius: 15px;
+  display: block;
+  height: 75px;
+  padding: 5px;
+  padding-left: 15px;
+  margin: 10px;
+}
+
+.entry>.info {
+  display: inline-block;
+}
+
+.entry>.info>.title {
+  display: inline-block;
+  font-size: 1.25em;
+  font-weight: 600;
+}
+
+.entry>.info>.path {
+  display: inline-block;
+  font-size: 1em;
+}
+
+.entry>.info>.path::before {
+  content: "(";
+}
+
+.entry>.info>.path::after {
+  content: ")";
+}
+
+/* .entry > .info > .description {
+} */
+
+.entry>.info>.default::before {
+  content: "Default: ";
+  font-weight: 600;
+}
+
+.entry>.config {
+  display: inline-block;
+  position: relative;
+  height: 100%;
+  top: calc(-100% + 6px);
+  width: 100%;
+}
+
+.entry>.config>select,
+.entry>.config>.config-multiinput,
+.entry>.config>.config-display,
+.entry>.config>input {
+  position: relative;
+  top: 50%;
+  left: calc(100% - 10px);
+  transform: translate(-100%, -50%);
+  width: min(100%, 500px);
+  height: 50px;
+  padding-left: 10px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  font-size: large;
+}
+
+.entry>.config>select {
+  width: min(100%, 516px);
+}
+
+.entry>.config>.config-display,
+.entry>.config>.config-multiinput {
+  width: min(100%, 516px);
+  margin: 0;
+  padding: 0;
+  font-size: 1em;
+  position: relative;
+  top: calc(50% - 15px);
+  transform: translate(-100%, -50%);
+}
+
+.entry>.config>.config-display>.config-display-list,
+.entry>.config>.config-multiinput>.config-multiinput-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.entry>.config>.config-multiinput>.config-multiinput-input {
+  width: calc(100% - 10px);
+}
+
+.entry>.config>.config-display>.config-display-list>*,
+.entry>.config>.config-multiinput>.config-multiinput-list>* {
+  display: inline-block;
+  cursor: pointer;
+  padding: 2px 4px;
+  background: #eee;
+  margin: 2px 0;
+  color: black;
+  transition: 125ms background linear;
+  border-right: 2px black solid;
+}
+
+.entry>.config>.config-display>.config-display-list>*:hover,
+.entry>.config>.config-multiinput>.config-multiinput-list>*:hover {
+  background: lightcoral;
+  transition: 125ms background linear;
+}
+
+.entry>.config>.config-display>.config-display-list>*:last-child,
+.entry>.config>.config-multiinput>.config-multiinput-list>*:last-child {
+  border-right: 0;
+}
+
+.exported-config {
+  margin-top: 20px;
+  width: calc(100% - 15px);
+  min-height: 100px;
+  padding: 5px;
+  background-color: rgb(29, 29, 29);
+  color: white;
+  resize: vertical;
+}
+
+dialog>select,
+dialog>input {
+  float: right;
+  width: 150px;
+  margin-left: 10px;
+}
+
+dialog>select {
+  width: 158px;
+  height: 1.55em;
+}
+
+dialog>button {
+  margin-top: 5px;
+  float: left;
+  width: calc(50% - 5px);
+}
+
+dialog>button:last-child {
+  float: right;
+}

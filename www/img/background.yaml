@@ -1,0 +1,11 @@
+formats:
+  8k: 8k.png
+  4k: 4k.png
+  1080pHD: 1080pHD.png
+  1080p: 1080p.jpg
+  720p: 720p.jpg
+  480p: 480p.jpg
+  360p: 360p.jpg
+  240p: 240p.jpg
+  144p: 144p.jpg
+default: 1080p

@@ -1,0 +1,5 @@
+formats:
+  missing: missing.svg
+  eye_on: eye-on.svg
+  eye_off: eye-off.svg
+default: missing

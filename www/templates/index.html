@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <script type="text/pem" id="server-pem">
+      {{ pem }}
+    </script>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="{{base}}/res/css/login.css" />
+    <script src="{{base}}/res/js/login.js"></script>
+    <title>{{ title }}</title>
+  </head>
+  <body>
+    <div class="popover-warning hidden" id="http-warning">
+      <div class="popover">
+        <div class="popover-header">You cannot Continue!</div>
+        <div class="popover-text">
+          You are trying to access this page from,<br />
+          an Insecure Context (HTTP), please use HTTPS.<br />
+          If you cannot access this page over HTTPS,<br />
+          please ask your IT Administrator for guidance!<br />
+        </div>
+      </div>
+    </div>
+    <div class="container" id="container">
+      <div class="window">
+        <form>
+          {% if (raw_title != "Pyromanic") %}
+          <div class="title">{{ raw_title }}</div>
+          {% else %}
+          <div class="title title-larger">
+            <a
+              href="https://www.thehsi.cloud/pyromanic"
+              target="_blank"
+              rel="noopener"
+              tabindex="-1"
+              >Pyromanic</a
+            >
+          </div>
+          {% endif %}
+          <div class="subtitle">
+            {% if (raw_title != "Pyromanic") %} Powered by
+            <a
+              href="https://www.thehsi.cloud/pyromanic"
+              target="_blank"
+              rel="noopener"
+              tabindex="-1"
+              >Pyromanic</a
+            >
+            {% endif %}
+          </div>
+          <div class="field">
+            <label for="pyro-username">Username:</label>
+            <input
+              type="text"
+              name="pyro-username"
+              id="pyro-username"
+              class="username"
+              autocomplete="username"
+            />
+          </div>
+
+          <div class="field">
+            <label for="pyro-password">Password:</label>
+            <div class="input-wrapper">
+              <input
+                type="password"
+                name="pyro-password"
+                id="pyro-password"
+                class="password"
+                autocomplete="current-password"
+              />
+              <div class="show-button" id="show-button">
+                <img alt="Eye Shut" src="./res/img/icon-eye_off.img" />
+              </div>
+            </div>
+          </div>
+
+          <span class="info-label">
+            {% if info %} {{info}} {% else %}
+            <a class="hidden-text"></a> {% endif %}
+          </span>
+
+          <div class="field">
+            <input type="submit" id="submit" class="submit" value="Login" />
+          </div>
+        </form>
+      </div>
+    </div>
+    <div class="emblem">
+      <div class="emblem-text">Developed by</div>
+      <a
+        href="https://www.thehsi.cloud/"
+        target="_blank"
+        rel="noopener"
+        class="emplem-link"
+        tabindex="-1"
+        >TheHSI</a
+      >
+      <div class="emblem-logo"></div>
+    </div>
+  </body>
+</html>

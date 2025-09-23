@@ -1,0 +1,6 @@
+rcssmin
+rjsmin
+minify-html
+flask
+requests
+pillow
