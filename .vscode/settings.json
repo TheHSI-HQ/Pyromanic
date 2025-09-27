@@ -1,0 +1,26 @@
+{
+  "cSpell.words": [
+    "argdefs",
+    "Configurator",
+    "cssmin",
+    "decompressobj",
+    "jsmin",
+    "jsyaml",
+    "LANCZOS",
+    "letmein",
+    "multiinput",
+    "noopener",
+    "onclick",
+    "pyro",
+    "rcssmin",
+    "rjsmin",
+    "rrequest",
+    "stylesheet",
+    "tabindex",
+    "WBITS"
+  ],
+  "compile-hero.disable-compile-files-on-did-save-code": true,
+  "files.readonlyInclude": {
+    "{**/.c4z/.extsrcs/*.PROTSYM.cbl,**/.c4z/.extsrcs/*.PROTSYM.listing}": true
+  }
+}

@@ -1,5 +1,8 @@
 # Metrics
-metrics.csv
+assets/metrics.csv
+
+# Dev Config
+config/pyromanic.dev.yaml
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

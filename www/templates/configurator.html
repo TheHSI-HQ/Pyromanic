@@ -11,7 +11,7 @@
   <body>
     <div class="container">
         <div class="config-title">Pyromanic {{ cfg['version'] }}</div>
-        <div class="config-subtitle">Configurator</div>
+        <div class="config-subtitle">Configurator <warn>[WIP]</warn></div>
         <div class="options">
             <div class="entry">
                 <div class="info">
@@ -27,6 +27,8 @@
                     </select>
                 </div>
             </div>
+
+            <hr>
 
             <div class="entry">
                 <div class="info">
@@ -69,6 +71,57 @@
                 </div>
             </div>
 
+            <hr>
+
+            <div class="entry">
+                <div class="info">
+                    <div class="title">Debug / Record Metrics</div>
+                    <div class="path">debug.record_metrics</div>
+                    <div class="default">False</div>
+                    <div class="description">Whether to Record Metrics or Not <warn>DO NOT USE IN PRODUCTION</warn></div>
+                </div>
+                <div class="config">
+                    <select title="debug-record_metrics" name="debug-record_metrics" id="cfg-debug.record_metrics">
+                        <option value="true" {% if cfg["debug"]["record_metrics"] %}selected{% endif %}>True</option>
+                        <option value="false" {% if not cfg["debug"]["record_metrics"] %}selected{% endif %}>False</option>
+                    </select>
+                </div>
+            </div>
+
+            <hr>
+
+            <div class="entry">
+                <div class="info">
+                    <div class="title">Logging / Enabled</div>
+                    <div class="path">logging.enabled</div>
+                    <div class="default">True</div>
+                    <div class="description">Enabled Logging</div>
+                </div>
+                <div class="config">
+                    <select title="logging-enabled" name="logging-enabled" id="cfg-logging.enabled">
+                        <option value="true" {% if cfg["logging"]["enabled"] %}selected{% endif %}>True</option>
+                        <option value="false" {% if not cfg["logging"]["enabled"] %}selected{% endif %}>False</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="entry">
+                <div class="info">
+                    <div class="title">Logging / Show IPs</div>
+                    <div class="path">logging.show_ips</div>
+                    <div class="default">True</div>
+                    <div class="description">Whether to Log IPs or Not</div>
+                </div>
+                <div class="config">
+                    <select title="logging-show_ips" name="logging-show_ips" id="cfg-logging.show_ips">
+                        <option value="true" {% if cfg["logging"]["show_ips"] %}selected{% endif %}>True</option>
+                        <option value="false" {% if not cfg["logging"]["show_ips"] %}selected{% endif %}>False</option>
+                    </select>
+                </div>
+            </div>
+
+            <hr>
+
             <div class="entry">
                 <div class="info">
                     <div class="title">Proxy / Remote IP Header</div>
@@ -92,13 +145,13 @@
 
             <div class="entry">
                 <div class="info">
-                    <div class="title">Skip / X-Pyromanic Header</div>
+                    <div class="title">Proxy / Skip X-Pyromanic Header</div>
                     <div class="path">proxy.skip_x-pyromanic</div>
                     <div class="default">False</div>
                     <div class="description">Skips adding the X-Pyromanic Header to Requests from the Client</div>
                 </div>
                 <div class="config">
-                    <select title="enabled" name="enabled" id="cfg-proxy.skip_x-pyromanic">
+                    <select title="proxy-skip_x-pyromanic" name="proxy-skip_x-pyromanic" id="cfg-proxy.skip_x-pyromanic">
                         <option value="true" {% if cfg["proxy"]["skip_x-pyromanic"] %}selected{% endif %}>True</option>
                         <option value="false" {% if not cfg["proxy"]["skip_x-pyromanic"] %}selected{% endif %}>False</option>
                     </select>
@@ -125,11 +178,30 @@
                     <button onclick="addProxyAdditionalData()">Add</button>
                     <button onclick="document.getElementById('cfg-proxy.additional_data-dialog').close()">Abort</button>
                 </dialog>
-                <font color="red"><b>FIX ME</b></font>
+                <dialog id="cfg-proxy.additional_data-dialog-modify">
+                    <label for="cfg-proxy.additional_data-modify-type">Type:</label>
+                    <select id="cfg-proxy.additional_data-modify-type">
+                        <option value="header">Header</option>
+                        <option value="parameter">Parameter</option>
+                    </select><br>
+                    <label for="cfg-proxy.additional_data-modify-key">Key:</label>
+                    <input id="cfg-proxy.additional_data-modify-key"><br>
+                    <label for="cfg-proxy.additional_data-modify-value">Value:</label>
+                    <input id="cfg-proxy.additional_data-modify-value"><br>
+                    <button onclick="modifyProxyAdditionalData()">Modify</button>
+                    <button onclick="document.getElementById('cfg-proxy.additional_data-dialog-modify').close()">Abort</button>
+                    <br><button onclick="deleteProxyAdditionalData()">Delete</button>
+                </dialog>
                 <div class="config">
-                    <div class="config-display" id="cfg-proxy.additional_data">
-                        <ul class="config-display-list"></ul>
+                    <div class="config-display cfg-proxy-additional_data-value" id="cfg-proxy.additional_data">
                     </div>
+                    {% if cfg["proxy"]["additional_data"] %}
+                        <script>
+                            document.getElementById("cfg-proxy.additional_data").value = {{ cfg["proxy"]["additional_data"]|safe }};
+                            document.currentScript.remove()
+                        </script>
+                    {% endif %}
+                    <div class="button" id="proxy-additional_data-add">+</div>
                 </div>
             </div>
 
@@ -212,7 +284,7 @@
                     <div class="description">Prevents the Proxy from changing the Request</div>
                 </div>
                 <div class="config">
-                    <select title="enabled" name="enabled" id="cfg-proxy.no_modify">
+                    <select title="proxy-no_modify" name="proxy-no_modify" id="cfg-proxy.no_modify">
                         <script>
                             document.currentScript.parentElement.addEventListener("change", (e) => {
                                 if (e.target.value=="false" && document.getElementById("cfg-proxy.strict_no_modify").value=="true")
@@ -233,7 +305,7 @@
                     <div class="description">Prevents the Proxy from making any changes to the Request</div>
                 </div>
                 <div class="config">
-                    <select title="enabled" name="enabled" id="cfg-proxy.strict_no_modify">
+                    <select title="proxy-strict_no_modify" name="proxy-strict_no_modify" id="cfg-proxy.strict_no_modify">
                         <script>
                             document.currentScript.parentElement.addEventListener("change", (e) => {
                                 if (e.target.value=="true" && document.getElementById("cfg-proxy.no_modify").value=="false")
@@ -260,18 +332,41 @@
 
             <div class="entry">
                 <div class="info">
-                    <div class="title">Privacy / Log IPs</div>
-                    <div class="path">privacy.log_ips</div>
-                    <div class="default">True</div>
-                    <div class="description">Whether to Log IPs or Not</div>
+                    <div class="title">Proxy / Timeout</div>
+                    <div class="path">proxy.timeout</div>
+                    <div class="default">30</div>
+                    <div class="description">How long the Server should wait for remote Content (Seconds)</div>
                 </div>
                 <div class="config">
-                    <select title="privacy-log_ips" name="privacy-log_ips" id="cfg-privacy.log_ips">
-                        <option value="true" {% if cfg["privacy"]["log_ips"] %}selected{% endif %}>True</option>
-                        <option value="false" {% if not cfg["privacy"]["log_ips"] %}selected{% endif %}>False</option>
-                    </select>
+                    <input type="number" min=0 max=2147483647 value={{ cfg["proxy"]["timeout"] }} id="cfg-proxy.timeout">
                 </div>
             </div>
+
+            <div class="entry">
+                <div class="info">
+                    <div class="title">Proxy / Proxy / HTTP</div>
+                    <div class="path">proxy.proxy.http</div>
+                    <div class="default">none</div>
+                    <div class="description">HTTP Proxy for Remote Server</div>
+                </div>
+                <div class="config">
+                    <input title="proxy-proxy-http" name="proxy-proxy-http" id="cfg-proxy.proxy.http" value="{{ cfg["proxy"]["proxy"]["http"] }}">
+                </div>
+            </div>
+
+            <div class="entry">
+                <div class="info">
+                    <div class="title">Proxy / Proxy / HTTPS</div>
+                    <div class="path">proxy.proxy.https</div>
+                    <div class="default">none</div>
+                    <div class="description">HTTPS Proxy for Remote Server</div>
+                </div>
+                <div class="config">
+                    <input title="proxy-proxy-https" name="proxy-proxy-https" id="cfg-proxy.proxy.https" value="{{ cfg["proxy"]["proxy"]["https"] }}">
+                </div>
+            </div>
+
+            <hr>
 
             <div class="entry">
                 <div class="info">
@@ -299,6 +394,8 @@
                     <input type="number" min=0 max=2147483647 value={{ cfg["cache"]["duration"] }} id="cfg-cache.duration">
                 </div>
             </div>
+
+            <hr>
 
             <div class="entry">
                 <div class="info">
@@ -338,6 +435,8 @@
                     <input title="http-host" name="http-host" id="cfg-http.host" value="{{ cfg["http"]["host"] }}">
                 </div>
             </div>
+
+            <hr>
 
             <div class="entry">
                 <div class="info">
@@ -385,7 +484,7 @@
                 <div class="info">
                     <div class="title">HTTPS / Private Key</div>
                     <div class="path">https.private_key</div>
-                    <div class="default">server.key</div>
+                    <div class="default">./server.key</div>
                     <div class="description">HTTPS Server Private Key Path</div>
                 </div>
                 <div class="config">
@@ -416,6 +515,7 @@
                     <input title="https-host" name="https-host" id="cfg-https.host" value="{{ cfg["https"]["host"] }}">
                 </div>
             </div>
+            <hr>
             <textarea id="exported" class="exported-config" readonly></textarea>
             <div class="spacer">
         </div>
@@ -434,6 +534,8 @@
     </div>
 </body>
 <script>
+    if (!document.getElementById("cfg-proxy.additional_data").value)
+        document.getElementById("cfg-proxy.additional_data").value = [];
     document.querySelectorAll("input[type=number]").forEach((e) => {
     e.addEventListener("change", () => {
         e.value=Math.min(Math.max(e.value,e.min),e.max)
@@ -481,16 +583,108 @@
         )
     }
     function dumpConfig() {
-        document.getElementById("exported").value=jsyaml.dump(compileConfig())
+        config = `## (C) 2025 TheHSI
+## All rights reserved
+##
+## : pyromanic.yaml
+##   Pyromanic main config file
+##
+## Comments: ##
+## Commented Option: #
+## Option: key: value
+##
+version: {{ cfg['version'] }}
+## --- DO NOT MODIFY ABOVE THIS LINE ---
+
+`
+        config += jsyaml.dump(compileConfig())
+        document.getElementById("exported").value=config;
+
+    }
+    function renderProxyAdditionalData() {
+        Array.from(document.getElementById("cfg-proxy.additional_data").children).forEach(e=>e.remove());
+        for (let elm of document.getElementById("cfg-proxy.additional_data").value) {
+            let container = document.createElement("div");
+            container.classList.add("proxy-additional-data-container");
+
+            let type = document.createElement("div");
+            type.classList.add("proxy-additional-data-type");
+            type.textContent = elm["type"] + ": ";
+
+            let key = document.createElement("div");
+            key.classList.add("proxy-additional-data-key");
+            key.textContent = elm["key"];
+
+            let value = document.createElement("div");
+            value.classList.add("proxy-additional-data-value");
+            value.textContent = elm["value"];
+
+            container.append(type);
+            container.append(key);
+            container.append(value);
+
+            container.addEventListener("click", () => {
+                document.getElementById("cfg-proxy.additional_data-dialog-modify").value={type:type.textContent.substring(0,type.textContent.length-2),key:key.textContent,value:value.textContent};
+                document.getElementById("cfg-proxy.additional_data-modify-type").value=type.textContent.substring(0,type.textContent.length-2);
+                document.getElementById("cfg-proxy.additional_data-modify-key").value=key.textContent;
+                document.getElementById("cfg-proxy.additional_data-modify-value").value=value.textContent;
+                document.getElementById('cfg-proxy.additional_data-dialog-modify').showModal()
+            });
+
+            document.getElementById("cfg-proxy.additional_data").append(container);
+        }
+    }
+    renderProxyAdditionalData();
+    function modifyProxyAdditionalData() {
+        let type_data = document.getElementById("cfg-proxy.additional_data-modify-type").value;
+        let key_data = document.getElementById("cfg-proxy.additional_data-modify-key").value;
+        let value_data = document.getElementById("cfg-proxy.additional_data-modify-value").value;
+
+        let copy = []
+        let data = document.getElementById("cfg-proxy.additional_data-dialog-modify").value;
+
+        for (let elm of document.getElementById("cfg-proxy.additional_data").value) {
+            if (elm.type == data["type"])
+                if (elm.key == data["key"])
+                    if (elm.value == data["value"]) {
+                        copy.push({type: type_data, key: key_data, value: value_data});
+                        continue;
+                    }
+            copy.push(elm);
+        }
+        document.getElementById("cfg-proxy.additional_data").value = copy;
+
+        renderProxyAdditionalData();
+        document.getElementById("cfg-proxy.additional_data-dialog-modify").close();
+    }
+    function deleteProxyAdditionalData() {
+        let copy = []
+        for (let elm of document.getElementById("cfg-proxy.additional_data").value) {
+            if (elm.type == document.getElementById("cfg-proxy.additional_data-modify-type").value)
+                if (elm.key == document.getElementById("cfg-proxy.additional_data-modify-key").value)
+                    if (elm.value == document.getElementById("cfg-proxy.additional_data-modify-value").value)
+                        continue;
+            copy.push(elm);
+        }
+        document.getElementById("cfg-proxy.additional_data").value = copy;
+        renderProxyAdditionalData();
+        document.getElementById("cfg-proxy.additional_data-dialog-modify").close();
     }
     function addProxyAdditionalData() {
-        let type = document.getElementById("cfg-proxy.additional_data-type").value;
-        let key = document.getElementById("cfg-proxy.additional_data-key").value;
-        let value = document.getElementById("cfg-proxy.additional_data-value").value;
-        let data = {type: type, key: key, value: value};
-        console.log(data);
+        let type_data = document.getElementById("cfg-proxy.additional_data-type").value;
+        let key_data = document.getElementById("cfg-proxy.additional_data-key").value;
+        let value_data = document.getElementById("cfg-proxy.additional_data-value").value;
+        document.getElementById("cfg-proxy.additional_data").value.push({type: type_data, key: key_data, value: value_data})
+
         document.getElementById('cfg-proxy.additional_data-dialog').close()
+        document.getElementById("cfg-proxy.additional_data-type").value = "header";
+        document.getElementById("cfg-proxy.additional_data-key").value = "";
+        document.getElementById("cfg-proxy.additional_data-value").value = "";
+
+        renderProxyAdditionalData();
     }
+
+    document.getElementById('proxy-additional_data-add').addEventListener("click",() => document.getElementById('cfg-proxy.additional_data-dialog').showModal());
 
     document.querySelectorAll('.config-multiinput').forEach(block => {
         const input = block.querySelector('.config-multiinput-input');
@@ -519,26 +713,13 @@
         });
         render();
     });
-    document.querySelectorAll('.config-display').forEach(block => {
-        const ul = block.querySelector('.config-display-list');
-        if (!block.value) block.value = [];
-
-        function render() {
-            ul.innerHTML = '';
-            block.value.forEach((val, i) => {
-            const li = document.createElement('li');
-            li.textContent = val;
-            li.onclick = () => {
-                block.value.splice(i, 1);
-                render();
-            };
-            ul.appendChild(li);
-            });
-        }
-
-        block.render = render;
-        render();
-    });
+    document.getElementById("cfg-proxy.additional_data").addEventListener('wheel', function(e) {
+        e.preventDefault();
+        document.getElementById("cfg-proxy.additional_data").scrollBy({
+            top: e.deltaY * 0.05, // Reduce to slow scroll
+            behavior: 'auto'
+        });
+    }, { passive: false });
     dumpConfig();
     setInterval(dumpConfig, 2500)
 </script>

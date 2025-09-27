@@ -3,6 +3,10 @@ from typing import Callable, Any
 from flask import Response, request
 from types import FunctionType
 from functools import wraps
+from libs.config import load_reloading_config, read_config
+from os.path import exists
+
+cfg = load_reloading_config("pyromanic.yaml")
 
 class Stopwatch:
     def __init__(self) -> None:
@@ -25,9 +29,13 @@ class Metrics:
     def write(self, url: str, time: timedelta, cached: bool=False, external: timedelta = timedelta(0)):
         microseconds = time.microseconds + time.seconds*1000000
         microseconds_worked = (time.microseconds + time.seconds*1000000) - (external.microseconds + external.seconds*1000000)
-        self.file = open("./assets/metrics.csv", 'a')
-        self.file.write(f"{url}, {microseconds}, {datetime.now().isoformat()}, {microseconds_worked}, {1 if cached else 0}\n")
-        self.file.close()
+        if read_config(cfg(), "debug.record_metrics", bool):
+            if not exists("./assets/metrics.csv"):
+                with open("./assets/metrics.csv", 'w') as f:
+                    f.write("url, duration, time, worked, cached\n")
+            self.file = open("./assets/metrics.csv", 'a')
+            self.file.write(f"{url}, {microseconds}, {datetime.now().isoformat()}, {microseconds_worked}, {1 if cached else 0}\n")
+            self.file.close()
 
     def measure(self, function: Callable[[Any], Any] | Callable[[], Any]):
         @wraps(function) # pyright: ignore[reportArgumentType]

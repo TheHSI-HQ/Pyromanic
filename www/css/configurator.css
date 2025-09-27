@@ -1,8 +1,8 @@
 body {
-  background-image: url("<<base>>/res/img/background-1080pHD.img");
-  background-size: cover;
+  background-image: url(<<base>>/res/img/background_tiles-512.img);
+  background-size: 512px;
   background-position: center center;
-  background-repeat: no-repeat;
+  background-repeat: repeat;
   height: auto;
   overflow-x: hidden;
   font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
@@ -34,12 +34,12 @@ a {
   color: black;
 }
 
-.emblem>* {
+.emblem > * {
   display: inline-block;
 }
 
-.emblem>.emblem-logo {
-  background-image: url(https://thehsi.cloud/favicon.ico);
+.emblem > .emblem-logo {
+  background-image: url(<<base>>/res/img/logo-thehsi.img);
   height: 1em;
   width: 1em;
   padding: 5px;
@@ -91,38 +91,38 @@ a {
   margin: 10px;
 }
 
-.entry>.info {
+.entry > .info {
   display: inline-block;
 }
 
-.entry>.info>.title {
+.entry > .info > .title {
   display: inline-block;
   font-size: 1.25em;
   font-weight: 600;
 }
 
-.entry>.info>.path {
+.entry > .info > .path {
   display: inline-block;
   font-size: 1em;
 }
 
-.entry>.info>.path::before {
+.entry > .info > .path::before {
   content: "(";
 }
 
-.entry>.info>.path::after {
+.entry > .info > .path::after {
   content: ")";
 }
 
 /* .entry > .info > .description {
 } */
 
-.entry>.info>.default::before {
+.entry > .info > .default::before {
   content: "Default: ";
   font-weight: 600;
 }
 
-.entry>.config {
+.entry > .config {
   display: inline-block;
   position: relative;
   height: 100%;
@@ -130,10 +130,10 @@ a {
   width: 100%;
 }
 
-.entry>.config>select,
-.entry>.config>.config-multiinput,
-.entry>.config>.config-display,
-.entry>.config>input {
+.entry > .config > select,
+.entry > .config > .config-multiinput,
+.entry > .config > .config-display,
+.entry > .config > input {
   position: relative;
   top: 50%;
   left: calc(100% - 10px);
@@ -146,12 +146,12 @@ a {
   font-size: large;
 }
 
-.entry>.config>select {
+.entry > .config > select {
   width: min(100%, 516px);
 }
 
-.entry>.config>.config-display,
-.entry>.config>.config-multiinput {
+.entry > .config > .config-display,
+.entry > .config > .config-multiinput {
   width: min(100%, 516px);
   margin: 0;
   padding: 0;
@@ -161,19 +161,19 @@ a {
   transform: translate(-100%, -50%);
 }
 
-.entry>.config>.config-display>.config-display-list,
-.entry>.config>.config-multiinput>.config-multiinput-list {
+.entry > .config > .config-display > .config-display-list,
+.entry > .config > .config-multiinput > .config-multiinput-list {
   list-style: none;
   padding: 0;
   margin: 0;
 }
 
-.entry>.config>.config-multiinput>.config-multiinput-input {
+.entry > .config > .config-multiinput > .config-multiinput-input {
   width: calc(100% - 10px);
 }
 
-.entry>.config>.config-display>.config-display-list>*,
-.entry>.config>.config-multiinput>.config-multiinput-list>* {
+.entry > .config > .config-display > .config-display-list > *,
+.entry > .config > .config-multiinput > .config-multiinput-list > * {
   display: inline-block;
   cursor: pointer;
   padding: 2px 4px;
@@ -184,14 +184,14 @@ a {
   border-right: 2px black solid;
 }
 
-.entry>.config>.config-display>.config-display-list>*:hover,
-.entry>.config>.config-multiinput>.config-multiinput-list>*:hover {
+.entry > .config > .config-display > .config-display-list > *:hover,
+.entry > .config > .config-multiinput > .config-multiinput-list > *:hover {
   background: lightcoral;
   transition: 125ms background linear;
 }
 
-.entry>.config>.config-display>.config-display-list>*:last-child,
-.entry>.config>.config-multiinput>.config-multiinput-list>*:last-child {
+.entry > .config > .config-display > .config-display-list > *:last-child,
+.entry > .config > .config-multiinput > .config-multiinput-list > *:last-child {
   border-right: 0;
 }
 
@@ -199,30 +199,95 @@ a {
   margin-top: 20px;
   width: calc(100% - 15px);
   min-height: 100px;
+  height: 500px;
   padding: 5px;
   background-color: rgb(29, 29, 29);
   color: white;
   resize: vertical;
 }
 
-dialog>select,
-dialog>input {
+dialog > select,
+dialog > input {
   float: right;
   width: 150px;
   margin-left: 10px;
 }
 
-dialog>select {
+dialog > select {
   width: 158px;
   height: 1.55em;
 }
 
-dialog>button {
+dialog > button {
   margin-top: 5px;
   float: left;
   width: calc(50% - 5px);
 }
 
-dialog>button:last-child {
+dialog > button:last-child {
   float: right;
+}
+
+warn {
+  color: red;
+  font-weight: 700;
+}
+
+.cfg-proxy-additional_data-value {
+  overflow-y: scroll;
+  position: relative !important;
+  height: 70px !important;
+  top: 37.5px !important;
+  width: 470px !important;
+  display: inline-block;
+}
+
+.proxy-additional-data-container {
+  display: inline-block;
+  background-color: #0004;
+  border-radius: 10px;
+  padding: 5px;
+  margin-bottom: 10px;
+}
+
+.proxy-additional-data-type {
+  display: inline-block;
+  width: fit-content;
+  font-weight: 700;
+}
+
+.proxy-additional-data-key {
+  display: inline-block;
+  font-weight: 800;
+  width: 250px;
+}
+
+.proxy-additional-data-value {
+  width: 440px;
+  font-weight: 500;
+  display: block;
+  overflow: hidden;
+  padding-bottom: 10px;
+}
+
+.config:has(.cfg-proxy-additional_data-value) {
+  width: calc(100% - 45px);
+  font-size: 0.75em;
+}
+
+.config:has(.cfg-proxy-additional_data-value) > .button {
+  border: red 5px solid;
+  background-color: red;
+  color: white;
+  /* padding: 10px; */
+  width: 20px;
+  text-align: center;
+  font-weight: 900;
+  display: block;
+  position: relative;
+  left: calc(100% + 5px);
+  top: calc(-75% + 6px);
+  margin-bottom: 5px;
+  border-radius: 7.5px;
+  cursor: pointer;
 }

@@ -5,10 +5,19 @@ from hashlib import sha256
 from time import sleep
 from threading import Thread
 from typing import Callable
+from os.path import exists, splitext
 
 def load_config(filename: str) -> YAMLObject:
-    with open(Path('.') / 'config' / filename, 'r') as f:
-        return safe_load(f.read())
+    # Prefer xyz.dev.yaml over xyz.yaml
+    dev_path =  Path('.') / 'config' / (splitext(filename)[0] + ".dev" + splitext(filename)[1])
+    path =  Path('.') / 'config' / filename
+
+    if exists(dev_path):
+        with open(dev_path, 'r') as f:
+            return safe_load(f.read())
+    else:
+        with open(path, 'r') as f:
+            return safe_load(f.read())
 
 def load_reloading_config(filename: str) -> Callable[[], YAMLObject]:
     class config:

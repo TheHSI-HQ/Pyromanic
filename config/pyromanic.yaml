@@ -8,7 +8,7 @@
 ## Commented Option: #
 ## Option: key: value
 ##
-version: v1.0.5
+version: v1.0.6
 ## --- DO NOT MODIFY ABOVE THIS LINE ---
 
 ## Enables Pyromanic [true]
@@ -30,6 +30,25 @@ app:
 
   ## App Base Path [/pyro]
   base_path: /pyro
+
+## Debug Settings (Use Defaults in Production)
+debug:
+  ## Record Traffic Handle Time to ./assets/metrics.csv [false]
+  record_metrics: false
+
+## Logging Setting
+logging:
+  ## Enabled Logging [true]
+  enabled: true
+
+  ## Show IPs in Log [true]
+  show_ips: true
+
+  ## Log File: PATH | off [off]
+  file: off
+
+  ## Log to Console [true]
+  console: true
 
 ## Proxy Settings
 proxy:
@@ -82,15 +101,19 @@ proxy:
   ## Remote Server Root URL [http://localhost:5000/]
   web_root: http://localhost:5000/
 
-## Debug Settings (Don't use in Production)
-debug:
-  ## Record Traffic Handle Time to ./assets/metrics.csv
-  record_metrics: false
+  ## Remote Connection Timeout in Sec [30]
+  timeout: 30
 
-## Privacy Setting
-privacy:
-  ## Log IPs [true]
-  log_ips: true
+  ## Proxies Request to the Remote Server [none, none]
+  ## Supports these formats:
+  ## - socks5://host:port
+  ## - socks5://user:pass@host:port
+  ## - socks5h://host:port
+  ## - socks5h://user:pass@host:port
+  ## - none
+  proxy:
+    http: none
+    https: none
 
 ## Caching Settings
 cache:
@@ -120,10 +143,10 @@ https:
   adhoc: false
 
   ## Certificate Path [./server.crt]
-  certificate: server.crt
+  certificate: ./server.crt
 
   ## Private Key Path [./server.key]
-  private_key: server.key
+  private_key: ./server.key
 
   ## HTTPS Port [443]
   port: 443

@@ -20,7 +20,9 @@ def css_provider(path: str):
         read = f.read()
 
         base = read_config(cfg(), 'app.base_path', str).removesuffix("/")
+        version = read_config(cfg(), 'version', str)
         read = read.replace("<<base>>", base)
+        read = read.replace("<<version>>", version)
 
         if "dev" in request.args:
             return Response(read, 200, mimetype="text/css")
@@ -38,7 +40,9 @@ def js_provider(path: str):
         read = f.read()
 
         base = read_config(cfg(), 'app.base_path', str).removesuffix("/")
+        version = read_config(cfg(), 'version', str)
         read = read.replace("<<base>>", base)
+        read = read.replace("<<version>>", version)
 
         if "dev" in request.args:
             return Response(read, 200, mimetype="text/javascript")

@@ -117,7 +117,11 @@ def proxy_path(_flagExternal: Callable[[], None], _flagInternal: Callable[[], No
         target_url, headers = add_additional_data(target_url, headers)
         headers = append_info_header(headers, client_ip)
 
-
+    if read_config(cfg(), 'proxy.proxy.http', str).lower() == "none" or read_config(cfg(), 'proxy.proxy.https', str).lower() == "none":
+        proxies = None
+    else:
+        proxies=dict(http=read_config(cfg(), 'proxy.proxy.http', str),
+                    https=read_config(cfg(), 'proxy.proxy.https', str))
     _flagExternal()
     resp = rrequest(
         method=request.method,
@@ -127,7 +131,8 @@ def proxy_path(_flagExternal: Callable[[], None], _flagInternal: Callable[[], No
         cookies=cookies,
         stream=True,
         allow_redirects=False,
-        timeout=30
+        timeout=read_config(cfg(), 'proxy.timeout', int),
+        proxies=proxies
     )
     _flagInternal()
 
