@@ -3,3 +3,6 @@ rjsmin
 minify-html
 flask
 requests[socks]
+pymysql
+psycopg2-binary
+sqlalchemy

@@ -1,12 +1,18 @@
 # Metrics
 assets/metrics.csv
 
+# Database
+database.sqlite3
+
 # Dev Config
 config/pyromanic.dev.yaml
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
-*.py[codz]
+*.pyc
+*.pyo
+*.pyd
+*.pyz
 *$py.class
 
 # C extensions

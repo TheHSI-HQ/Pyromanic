@@ -55,6 +55,14 @@ def read_config(
         val = val[p]
 
     if isinstance(val, expected_type):
+        if isinstance(val, str):
+            if val.startswith("[[") and val.endswith("]]"):
+                secret_key = val.removeprefix("[[").removesuffix("]]")
+                secrets: Any = load_config("secrets.yaml")
+                if secret_key in secrets:
+                    return secrets[secret_key]
+                else:
+                    return "ERR|No Such Secret: " + secret_key # pyright: ignore[reportReturnType]
         return val  # type: ignore[return-value]  # (mypy sees it's T)
     raise ValueError(
         f"{path} is of type {type(val).__name__} not {expected_type.__name__} as expected!"

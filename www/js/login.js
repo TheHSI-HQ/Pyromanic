@@ -1,52 +1,4 @@
 (function () {
-  async function login() {
-    const localKeyPair = await crypto.subtle.generateKey(
-      { name: "ECDH", namedCurve: "P-256" },
-      true,
-      ["deriveKey", "deriveBits"]
-    );
-    function pemToArrayBuffer(pem) {
-      const b64 = pem
-        .replace(/-----BEGIN PUBLIC KEY-----/, "")
-        .replace(/-----END PUBLIC KEY-----/, "")
-        .replace(/\s+/g, "");
-      const raw = atob(b64);
-      const buf = new ArrayBuffer(raw.length);
-      const view = new Uint8Array(buf);
-      for (let i = 0; i < raw.length; i++) view[i] = raw.charCodeAt(i);
-      return buf;
-    }
-
-    const serverPublicKey = await crypto.subtle.importKey(
-      "spki",
-      pemToArrayBuffer(document.getElementById("server-pem").textContent),
-      { name: "ECDH", namedCurve: "P-256" },
-      true,
-      []
-    );
-    const aesKey = await crypto.subtle.deriveKey(
-      {
-        name: "ECDH",
-        public: serverPublicKey,
-      },
-      localKeyPair.privateKey, // your private key
-      {
-        name: "AES-GCM",
-        length: 256,
-      },
-      false,
-      ["encrypt", "decrypt"]
-    );
-    console.log(aesKey);
-    const iv = crypto.getRandomValues(new Uint8Array(12));
-    const ciphertext = await crypto.subtle.encrypt(
-      { name: "AES-GCM", iv },
-      aesKey,
-      new TextEncoder().encode("secret message")
-    );
-    console.log(ciphertext);
-  }
-  login();
   const backgrounds = [
     {
       width: 854,
@@ -123,7 +75,23 @@
         password.focus();
         return;
       }
-      location = "<<base>>/letmein";
+      let form = document.createElement("form");
+      let username_field = document.createElement("input");
+      let password_field = document.createElement("input");
+      username_field.value = username.value;
+      username_field.name = "username";
+      username_field.type = "hidden";
+      password_field.value = password.value;
+      password_field.name = "password";
+      password_field.type = "hidden";
+      form.appendChild(username_field);
+      form.appendChild(password_field);
+      form.action = "<<base>>/letmein" + location.search;
+      form.method = "POST";
+      document.body.appendChild(form);
+      console.log(form);
+      form.submit();
+      form.remove();
     });
     document
       .getElementById("pyro-username")

@@ -8,7 +8,9 @@
 ## Commented Option: #
 ## Option: key: value
 ##
-version: v1.0.6
+## Secrets from secrets.yaml can be accessed using "[[secret_name_here]]"
+##
+version: v1.0.7
 ## --- DO NOT MODIFY ABOVE THIS LINE ---
 
 ## Enables Pyromanic [true]
@@ -31,6 +33,21 @@ app:
   ## App Base Path [/pyro]
   base_path: /pyro
 
+## Auth Settings
+auth:
+  ## Auth Key Expiry [30 days 00:00:00]
+  expires:
+    days: 30
+    hours: 0
+    minutes: 0
+    seconds: 0
+
+  ## Interval between Expiry Checks (seconds) [600]
+  check_interval: 600
+
+  ## Application Secret [[application_secret]]
+  secret: "[[application_secret]]"
+
 ## Debug Settings (Use Defaults in Production)
 debug:
   ## Record Traffic Handle Time to ./assets/metrics.csv [false]
@@ -49,6 +66,26 @@ logging:
 
   ## Log to Console [true]
   console: true
+
+## Database Settings
+database:
+  ## Database Type sqlite/mysql/postgresql [mysql]
+  type: mysql
+
+  ## Database Name (ignored for sqlite) [pyromanic]
+  database: pyromanic
+
+  ## Host of the Database (ignored for sqlite) [localhost:3306]
+  host: localhost:3306
+
+  ## User for the Database (ignored for sqlite) [pyromanic]
+  user: pyromanic
+
+  ## Password for the Database (ignored for sqlite) [[database_password]]
+  password: "[[database_password]]"
+
+  ## Database File (only for sqlite) [./database.sqlite3]
+  file: ./database.sqlite3
 
 ## Proxy Settings
 proxy:

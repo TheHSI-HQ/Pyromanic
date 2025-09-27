@@ -11,6 +11,8 @@ from routes.auth import auth
 from routes.proxy import proxy
 
 from libs.config import load_reloading_config, read_config
+from libs.auth import Auth
+
 from multiprocessing import Process
 from datetime import datetime
 from ssl import SSLContext, PROTOCOL_TLSv1_2
@@ -44,10 +46,12 @@ app.register_blueprint(auth)
 # Proxy must be last
 app.register_blueprint(proxy)
 
+Auth().run_taker()
+
 def log_error(s: str) -> int:
-    if not "Traceback" in s:
-        return 0
     print(s)
+    # if not "Traceback" in s:
+    #     return 0
     if read_config(cfg(), "logging.file", str) != "off":
         with open(read_config(cfg(), "logging.file", str), 'a') as f:
             return f.write(

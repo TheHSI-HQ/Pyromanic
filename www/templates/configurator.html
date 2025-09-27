@@ -4,6 +4,14 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="{{base}}/res/css/configurator.css" />
+    <!-- Highlight.js CSS theme -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+
+    <!-- Highlight.js JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+
+    <!-- YAML language support -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/yaml.min.js"></script>
     <script src="{{base}}/res/js/js-yaml.min.js"></script>
 
     <title>{{ title }}</title>
@@ -75,16 +83,91 @@
 
             <div class="entry">
                 <div class="info">
+                    <div class="title">Auth / Expires</div>
+                    <div class="path">auth.expires</div>
+                    <div class="default">30days 00:00:00</div>
+                    <div class="description">How long an Auth Key lasts</div>
+                </div>
+                <div class="config">
+                    <div id="cfg-auth.expires"></div>
+                    <div class="label-container"><label for="cfg-auth.expires-days">Days:</label><input type="number" min=0 max=2147483647 value={{ cfg["auth"]["expires"]["days"] }} id="cfg-auth.expires-days" class="small"></div>
+                    <div class="label-container"><label for="cfg-auth.expires-hours">Hours:</label><input type="number" min=0 max=23 value={{ cfg["auth"]["expires"]["hours"] }} id="cfg-auth.expires-hours" class="small"></div><br>
+                    <div class="label-container"><label for="cfg-auth.expires-minutes">Minutes:</label><input type="number" min=0 max=59 value={{ cfg["auth"]["expires"]["minutes"] }} id="cfg-auth.expires-minutes" class="small"></div>
+                    <div class="label-container"><label for="cfg-auth.expires-seconds">Seconds:</label><input type="number" min=0 max=59 value={{ cfg["auth"]["expires"]["seconds"] }} id="cfg-auth.expires-seconds" class="small"></div>
+                    <script>
+                        document.getElementById("cfg-auth.expires").value={
+                            days:{{ cfg["auth"]["expires"]["days"] }},
+                            hours:{{ cfg["auth"]["expires"]["hours"] }},
+                            minutes:{{ cfg["auth"]["expires"]["minutes"] }},
+                            seconds:{{ cfg["auth"]["expires"]["seconds"] }}
+                        };
+                        setInterval(() => {
+                            document.getElementById("cfg-auth.expires").value={
+                                days: parseInt(document.getElementById("cfg-auth.expires-days").value),
+                                hours: parseInt(document.getElementById("cfg-auth.expires-hours").value),
+                                minutes: parseInt(document.getElementById("cfg-auth.expires-minutes").value),
+                                seconds: parseInt(document.getElementById("cfg-auth.expires-seconds").value)
+                            };
+                        }, 250);
+                    </script>
+                </div>
+            </div>
+
+            <div class="entry">
+                <div class="info">
+                    <div class="title">Auth / Check Interval</div>
+                    <div class="path">auth.check_interval</div>
+                    <div class="default">600</div>
+                    <div class="description">How long to wait between Auth Key Expiry Checks (Seconds)</div>
+                </div>
+                <div class="config">
+                    <input type="number" min=0 max=2147483647 value={{ cfg["auth"]["check_interval"] }} id="cfg-auth.check_interval">
+                </div>
+            </div>
+
+            <div class="entry">
+                <div class="info">
+                    <div class="title">Auth / Secret</div>
+                    <div class="path">auth.secret</div>
+                    <div class="default">[[application_secret]]</div>
+                    <div class="description">A Secret Key for the Application
+                        <warn id="cfg-auth.secret-warn">Use Secrets for This!</warn>
+                    </div>
+                </div>
+                <div class="config">
+                    <input value={{ cfg["auth"]["secret"] }} id="cfg-auth.secret">
+                    <script>
+                        setInterval(() => {
+                            document.getElementById("cfg-auth.secret-warn").hidden =
+                                document.getElementById("cfg-auth.secret").value.startsWith("[[") &&
+                                document.getElementById("cfg-auth.secret").value.endsWith("]]");
+                        }, 250);
+                    </script>
+                </div>
+            </div>
+
+            <hr>
+
+            <div class="entry">
+                <div class="info">
                     <div class="title">Debug / Record Metrics</div>
                     <div class="path">debug.record_metrics</div>
                     <div class="default">False</div>
-                    <div class="description">Whether to Record Metrics or Not <warn>DO NOT USE IN PRODUCTION</warn></div>
+                    <div class="description">Whether to Record Metrics or Not
+                        <warn id="cfg-debug.record_metrics-warn">DO NOT USE IN PRODUCTION</warn>
+                    </div>
                 </div>
                 <div class="config">
                     <select title="debug-record_metrics" name="debug-record_metrics" id="cfg-debug.record_metrics">
                         <option value="true" {% if cfg["debug"]["record_metrics"] %}selected{% endif %}>True</option>
                         <option value="false" {% if not cfg["debug"]["record_metrics"] %}selected{% endif %}>False</option>
                     </select>
+                    <script>
+                        setInterval(() => {
+                            document.getElementById("cfg-debug.record_metrics-warn").hidden =
+                                document.getElementById("cfg-debug.record_metrics").value == "false";
+                        }, 250);
+                    </script>
                 </div>
             </div>
 
@@ -117,6 +200,107 @@
                         <option value="true" {% if cfg["logging"]["show_ips"] %}selected{% endif %}>True</option>
                         <option value="false" {% if not cfg["logging"]["show_ips"] %}selected{% endif %}>False</option>
                     </select>
+                </div>
+            </div>
+
+            <hr>
+
+            <div class="entry">
+                <div class="info">
+                    <div class="title">Database / Type</div>
+                    <div class="path">database.type</div>
+                    <div class="default">MySQL</div>
+                    <div class="description">What Type of Database you Use</div>
+                </div>
+                <div class="config">
+                    <select title="database-type" name="database-type" id="cfg-database.type">
+                        <option value="sqlite" {% if cfg["database"]["type"] == "sqlite" %}selected{% endif %}>SQLite</option>
+                        <option value="mysql" {% if cfg["database"]["type"] == "mysql" %}selected{% endif %}>MySQL</option>
+                        <option value="postgresql" {% if cfg["database"]["type"] == "postgresql" %}selected{% endif %}>PostgreSQL</option>
+                    </select>
+                    <script>
+                        setInterval(() => {
+                            if (document.getElementById("cfg-database.type").value == "sqlite") {
+                                document.querySelectorAll(".db-no-sqlite").forEach(e => e.disabled = true)
+                                document.querySelectorAll(".db-only-sqlite").forEach(e => e.disabled = false)
+                            }else {
+                                document.querySelectorAll(".db-no-sqlite").forEach(e => e.disabled = false)
+                                document.querySelectorAll(".db-only-sqlite").forEach(e => e.disabled = true)
+                            }
+                        }, 100);
+                    </script>
+                </div>
+            </div>
+
+            <div class="entry">
+                <div class="info">
+                    <div class="title">Database / Database</div>
+                    <div class="path">database.database</div>
+                    <div class="default">pyromanic</div>
+                    <div class="description">The Database for Pyromanic</div>
+                </div>
+                <div class="config">
+                    <input class="db-no-sqlite" title="database-database" name="database-database" id="cfg-database.database" value="{{ cfg["database"]["database"] }}">
+                </div>
+            </div>
+
+            <div class="entry">
+                <div class="info">
+                    <div class="title">Database / Host</div>
+                    <div class="path">database.host</div>
+                    <div class="default">localhost:3306</div>
+                    <div class="description">The Host of the Database</div>
+                </div>
+                <div class="config">
+                    <input class="db-no-sqlite" title="database-host" name="database-host" id="cfg-database.host" value="{{ cfg["database"]["host"] }}">
+                </div>
+            </div>
+
+            <div class="entry">
+                <div class="info">
+                    <div class="title">Database / User</div>
+                    <div class="path">database.user</div>
+                    <div class="default">pyromanic</div>
+                    <div class="description">The User for the Database</div>
+                </div>
+                <div class="config">
+                    <input class="db-no-sqlite" title="database-user" name="database-user" id="cfg-database.user" value="{{ cfg["database"]["user"] }}">
+                </div>
+            </div>
+
+            <div class="entry">
+                <div class="info">
+                    <div class="title">Database / Password</div>
+                    <div class="path">database.password</div>
+                    <div class="default">[[database_password]]</div>
+                    <div class="description">The Password for the Database (prepend "b64|" to use base64)
+                        <warn id="cfg-database.password-warn">Use Secrets for This!</warn>
+                    </div>
+                </div>
+                <div class="config">
+                    <datalist id="data-database.password">
+                        <option value="b64|"></option>
+                    </datalist>
+                    <input class="db-no-sqlite" list="data-database.password" title="database-password" name="database-password" id="cfg-database.password" value="{{ cfg["database"]["password"] }}">
+                    <script>
+                        setInterval(() => {
+                            document.getElementById("cfg-database.password-warn").hidden =
+                                document.getElementById("cfg-database.password").value.startsWith("[[") &&
+                                document.getElementById("cfg-database.password").value.endsWith("]]");
+                        }, 250);
+                    </script>
+                </div>
+            </div>
+
+            <div class="entry">
+                <div class="info">
+                    <div class="title">Database / File</div>
+                    <div class="path">database.file</div>
+                    <div class="default">./database.sqlite3</div>
+                    <div class="description">The File with the Database (Only SQLite)</div>
+                </div>
+                <div class="config">
+                    <input class="db-only-sqlite" title="database-file" name="database-file" id="cfg-database.file" value="{{ cfg["database"]["file"] }}">
                 </div>
             </div>
 
@@ -420,7 +604,7 @@
                     <div class="description">HTTP Server Port</div>
                 </div>
                 <div class="config">
-                    <input type="number" min=1 max=65535 value={{ cfg["http"]["port"] }} id="cfg-http.port">
+                    <input title="http-port" name="http-port" type="number" min=1 max=65535 value={{ cfg["http"]["port"] }} id="cfg-http.port">
                 </div>
             </div>
 
@@ -516,7 +700,8 @@
                 </div>
             </div>
             <hr>
-            <textarea id="exported" class="exported-config" readonly></textarea>
+            <pre><code class="language-yaml" id="exported">
+            </code></pre>
             <div class="spacer">
         </div>
         <div class="emblem">
@@ -525,7 +710,7 @@
                 href="https://www.thehsi.cloud/"
                 target="_blank"
                 rel="noopener"
-                class="emplem-link"
+                class="emblem-link"
                 tabindex="-1"
                 >TheHSI</a
             >
@@ -534,6 +719,7 @@
     </div>
 </body>
 <script>
+    hljs.highlightAll();
     if (!document.getElementById("cfg-proxy.additional_data").value)
         document.getElementById("cfg-proxy.additional_data").value = [];
     document.querySelectorAll("input[type=number]").forEach((e) => {
@@ -582,7 +768,8 @@
             )
         )
     }
-    function dumpConfig() {
+    let lastConfig="";
+    async function dumpConfig() {
         config = `## (C) 2025 TheHSI
 ## All rights reserved
 ##
@@ -598,7 +785,14 @@ version: {{ cfg['version'] }}
 
 `
         config += jsyaml.dump(compileConfig())
-        document.getElementById("exported").value=config;
+        let hash = Array.from(new Uint8Array(await crypto.subtle.digest("SHA-1",new TextEncoder().encode(config))))
+            .map(byte => byte.toString(16).padStart(2, '0'))
+            .join('');
+        if (lastConfig == hash) return;
+        lastConfig = hash;
+        document.getElementById("exported").textContent=config;
+        delete document.getElementById("exported").dataset.highlighted;
+        hljs.highlightElement(document.getElementById("exported"));
 
     }
     function renderProxyAdditionalData() {
@@ -721,6 +915,6 @@ version: {{ cfg['version'] }}
         });
     }, { passive: false });
     dumpConfig();
-    setInterval(dumpConfig, 2500)
+    setInterval(dumpConfig, 500)
 </script>
 </html>

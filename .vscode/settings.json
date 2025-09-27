@@ -1,10 +1,14 @@
 {
   "cSpell.words": [
     "argdefs",
+    "changeme",
     "Configurator",
     "cssmin",
+    "datalist",
     "decompressobj",
+    "endswith",
     "jsmin",
+    "jsonify",
     "jsyaml",
     "LANCZOS",
     "letmein",
@@ -15,6 +19,8 @@
     "rcssmin",
     "rjsmin",
     "rrequest",
+    "sessionmaker",
+    "startswith",
     "stylesheet",
     "tabindex",
     "WBITS"

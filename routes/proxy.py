@@ -2,9 +2,11 @@ from flask import Blueprint, request, Response, stream_with_context, redirect
 from typing import Iterator, Any, Callable
 from libs.config import load_reloading_config, read_config, nullable_read_config
 from libs.metrics import Metrics, flagExternal, flagInternal
+from libs.auth import Auth
 from requests import request as rrequest
 from re import compile, sub
 from logging import warning
+from urllib.parse import quote_plus
 import zlib
 
 cfg = load_reloading_config('pyromanic.yaml')
@@ -91,7 +93,12 @@ def proxy_path(_flagExternal: Callable[[], None], _flagInternal: Callable[[], No
     if request.cookies.get("PYRO-AuthKey", type=str) is None:
         base = read_config(cfg(), 'app.base_path', str)
         base += "" if base.endswith("/") else "/"
-        return redirect(base)
+        return redirect(base + "?url=" + quote_plus(request.full_path))
+
+    if not Auth().is_valid_cookie(request.cookies.get("PYRO-AuthKey", type=str)):
+        base = read_config(cfg(), 'app.base_path', str)
+        base += "" if base.endswith("/") else "/"
+        return redirect(base + "?url=" + quote_plus(request.full_path))
 
     if request.method not in read_config(cfg(), 'proxy.allowed_methods', list):
         return "<h1>405 Method Not Allowed</h1>", 405

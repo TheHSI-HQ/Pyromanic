@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="{{base}}/res/css/login.css" />
-    <script src="{{base}}/res/js/login.js"></script>
+    <script src="{{base}}/res/js/setup.js"></script>
     <title>{{ title }}</title>
   </head>
   <body>
@@ -59,6 +59,26 @@
               </div>
             </div>
           </div>
+
+          <div class="field">
+            <label for="pyro-password">Confirm:</label>
+            <div class="input-wrapper">
+              <input
+                type="password"
+                name="pyro-password"
+                id="pyro-password-repeat"
+                class="password"
+                autocomplete="current-password"
+              />
+              <div class="show-button" id="show-button-repeat">
+                <img alt="Eye Shut" src="./res/img/icon-eye_off.img" />
+              </div>
+            </div>
+          </div>
+
+          <span class="info-label" id="pyro-info">
+            <a class="hidden-text"></a>
+          </span>
 
           <div class="field">
             <input
