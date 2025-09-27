@@ -14,7 +14,7 @@ metrics = Metrics()
 
 proxy = Blueprint('proxy', __name__, template_folder='../www/templates')
 
-def add_additional_data(target_url: str, headers: dict[str, str]) -> tuple[str, dict[str, str]]:
+def add_additional_data(target_url: str, headers: dict[str, str], cookies: dict[str, str]) -> tuple[str, dict[str, str], dict[str, str]]:
     if nullable_read_config(cfg(), 'proxy.additional_data', list) is not None:
         for additional_data in read_config(cfg(), 'proxy.additional_data', list): # pyright: ignore[reportUnknownVariableType]
             if not isinstance(additional_data, dict):
@@ -22,6 +22,8 @@ def add_additional_data(target_url: str, headers: dict[str, str]) -> tuple[str, 
             match additional_data["type"]:
                 case "header":
                     headers[additional_data["key"]] = additional_data["value"]
+                case "cookie":
+                    cookies[additional_data["key"]] = additional_data["value"]
                 case "parameter":
                     if "?" in target_url:
                         target_url += "&" + additional_data["key"] + "=" + additional_data["value"] # pyright: ignore[reportUnknownVariableType]
@@ -29,7 +31,8 @@ def add_additional_data(target_url: str, headers: dict[str, str]) -> tuple[str, 
                         target_url += "?" + additional_data["key"] + "=" + additional_data["value"] # pyright: ignore[reportUnknownVariableType]
                 case _: # pyright: ignore[reportUnknownVariableType]
                     raise ValueError("Cannot compute Additional Data")
-    return (target_url, headers) # pyright: ignore[reportUnknownVariableType]
+    headers["Cookie"] = '; '.join([x+"="+cookies[x] for x in cookies])
+    return (target_url, headers, cookies) # pyright: ignore[reportUnknownVariableType]
 
 def fetch_client_ip(target_url: str) -> tuple[str, str]:
     fallback: str = str(request.remote_addr)
@@ -112,16 +115,16 @@ def proxy_path(_flagExternal: Callable[[], None], _flagInternal: Callable[[], No
 
     if read_config(cfg(), 'proxy.no_modify', bool) and read_config(cfg(), 'proxy.strict_no_modify', bool):
         headers = {key: value for key, value in request.headers}
-        cookies = {key: value for key, value in request.headers}
+        cookies = {key: dict(request.cookies)[key] for key in dict(request.cookies)}
     else:
-        cookies = {key: value for key, value in request.headers if key.lower() != 'pyro-authkey'}
         headers = {key: value for key, value in request.headers if key.lower() != 'host'}
         headers["Accept-Encoding"] = "identity"
+        cookies = {key: dict(request.cookies)[key] for key in dict(request.cookies) if key.lower() != 'pyro-authkey'}
 
 
     if not read_config(cfg(), 'proxy.no_modify', bool):
         client_ip, target_url = fetch_client_ip(target_url)
-        target_url, headers = add_additional_data(target_url, headers)
+        target_url, headers, cookies = add_additional_data(target_url, headers, cookies)
         headers = append_info_header(headers, client_ip)
 
     if read_config(cfg(), 'proxy.proxy.http', str).lower() == "none" or read_config(cfg(), 'proxy.proxy.https', str).lower() == "none":

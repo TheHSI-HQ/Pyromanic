@@ -99,25 +99,28 @@ proxy:
   skip_x-pyromanic: false
 
   ## Add additional Data to the Request [empty]
+  ## In this format:
+  ## - type: cookie | header | parameter
+  ##   key: X-Some-Key
+  ##   value: SomeValue
   additional_data:
-    # - type: header ## Adds a Header (X-Dummy with value Dummy Value)
-    #   key: X-Dummy
-    #   value: Dummy Value
-    # - type: parameter ## Adds an HTML Parameter (?dummy=dummy_data or &dummy=dummy_data)
-    #   key: dummy
-    #   value: dummy_data
 
   ## Remove a Header from the Response
   strip_headers:
     #- X-Dummy
 
-  ## Allowed HTTP Methods [GET, HEAD, OPTIONS, TRACE]
-  ### Options: GET, HEAD, POST, PUT, DELETE, CONNECT, OPTIONS, TRACE, PATCH
+  ## Allowed HTTP Methods [GET, HEAD, POST, PUT, DELETE, CONNECT, OPTIONS, TRACE, PATCH]
+  ## Options: GET, HEAD, POST, PUT, DELETE, CONNECT, OPTIONS, TRACE, PATCH
   allowed_methods:
     - GET
     - HEAD
+    - POST
+    - PUT
+    - DELETE
+    - CONNECT
     - OPTIONS
     - TRACE
+    - PATCH
 
   ## Where to get Client IP from [source]
   ## Options:

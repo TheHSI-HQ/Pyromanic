@@ -8,7 +8,8 @@ database.sqlite3
 config/pyromanic.dev.yaml
 
 # Byte-compiled / optimized / DLL files
-__pycache__/
+libs/__pycache__/*
+routes/__pycache__/*
 *.pyc
 *.pyo
 *.pyd

@@ -352,6 +352,7 @@
                 <dialog id="cfg-proxy.additional_data-dialog">
                     <label for="cfg-proxy.additional_data-type">Type:</label>
                     <select id="cfg-proxy.additional_data-type">
+                        <option value="cookie">Cookie</option>
                         <option value="header">Header</option>
                         <option value="parameter">Parameter</option>
                     </select><br>
@@ -365,6 +366,7 @@
                 <dialog id="cfg-proxy.additional_data-dialog-modify">
                     <label for="cfg-proxy.additional_data-modify-type">Type:</label>
                     <select id="cfg-proxy.additional_data-modify-type">
+                        <option value="cookie">Cookie</option>
                         <option value="header">Header</option>
                         <option value="parameter">Parameter</option>
                     </select><br>
@@ -414,7 +416,7 @@
                 <div class="info">
                     <div class="title">Proxy / Allowed Method</div>
                     <div class="path">proxy.allowed_methods</div>
-                    <div class="default">GET, HEAD, OPTIONS, TRACE</div>
+                    <div class="default">GET, HEAD, POST, PUT, DELETE, CONNECT, OPTIONS, TRACE, PATCH</div>
                     <div class="description">What Methods the Proxy should forward</div>
                 </div>
                 <div class="config">
