@@ -1,4 +1,4 @@
-FROM python:3.13.7-alpine AS builder
+FROM 3.13.7-slim-trixie AS builder
 
 WORKDIR /app
 
