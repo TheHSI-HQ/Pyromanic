@@ -20,18 +20,39 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: Build Docker image (Tag)
-        run: |
-          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/pyromanic:${{ github.ref_name }} .
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Build Docker image (Latest)
+      - name: Build and tag Docker image
         run: |
-          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/pyromanic:latest .
+          # Build once
+          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/pyromanic:${{ github.sha }} .
 
-      - name: Push Docker image (Tag)
-        run: |
-          docker push ${{ secrets.DOCKERHUB_USERNAME }}/pyromanic:${{ github.ref_name }}
+          # Tag for Docker Hub latest
+          docker tag \
+            ${{ secrets.DOCKERHUB_USERNAME }}/pyromanic:${{ github.sha }} \
+            ${{ secrets.DOCKERHUB_USERNAME }}/pyromanic:latest
 
-      - name: Push Docker image (Latest)
+          # Tag for GHCR commit
+          docker tag \
+            ${{ secrets.DOCKERHUB_USERNAME }}/pyromanic:${{ github.sha }} \
+            ghcr.io/${{ github.repository_owner }}/pyromanic:${{ github.sha }}
+
+          # Tag for GHCR latest
+          docker tag \
+            ${{ secrets.DOCKERHUB_USERNAME }}/pyromanic:${{ github.sha }} \
+            ghcr.io/${{ github.repository_owner }}/pyromanic:latest
+
+      - name: Push Docker image to Docker Hub
         run: |
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/pyromanic:${{ github.sha }}
           docker push ${{ secrets.DOCKERHUB_USERNAME }}/pyromanic:latest
+
+      - name: Push Docker image to GitHub Container Registry
+        run: |
+          docker push ghcr.io/${{ github.repository_owner }}/pyromanic:${{ github.sha }}
+          docker push ghcr.io/${{ github.repository_owner }}/pyromanic:latest
