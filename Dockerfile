@@ -1,11 +1,13 @@
-FROM python:3.13.7-alpine AS builder
+FROM python:3.13.7-alpine3.22 AS builder
 
 WORKDIR /app
 
 ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1
 
-RUN apk add --no-cache gcc libffi-dev musl-dev postgresql-dev
+RUN apk update && \
+    apk add --no-cache gcc libffi-dev musl-dev postgresql-dev && \
+    apk upgrade busybox
 
 RUN mkdir /install
 
@@ -16,7 +18,7 @@ RUN pip install --no-cache-dir --upgrade pip && \
 
 # ----------------------------
 
-FROM python:3.13.7-alpine
+FROM python:3.13.7-alpine3.22
 
 ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
