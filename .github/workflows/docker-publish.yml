@@ -22,7 +22,7 @@ jobs:
 
       - name: Build Docker image (Tag)
         run: |
-          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/pyromanic:${{ github.ref }} .
+          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/pyromanic:${{ github.ref_name }} .
 
       - name: Build Docker image (Latest)
         run: |
@@ -30,7 +30,7 @@ jobs:
 
       - name: Push Docker image (Tag)
         run: |
-          docker push ${{ secrets.DOCKERHUB_USERNAME }}/pyromanic:${{ github.ref }}
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/pyromanic:${{ github.ref_name }}
 
       - name: Push Docker image (Latest)
         run: |
