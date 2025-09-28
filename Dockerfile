@@ -1,4 +1,4 @@
-FROM python:3.14.0rc2-alpine3.22 AS builder
+FROM python:3.13.7-alpine AS builder
 
 WORKDIR /app
 
@@ -16,7 +16,7 @@ RUN pip install --no-cache-dir --upgrade pip && \
 
 # ----------------------------
 
-FROM python:3.14.0rc2-alpine3.22
+FROM python:3.13.7-alpine
 
 ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
