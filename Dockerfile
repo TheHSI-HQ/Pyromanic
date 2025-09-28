@@ -1,4 +1,4 @@
-FROM 3.13.7-slim-trixie AS builder
+FROM python:3.13.7-slim-trixie AS builder
 
 WORKDIR /app
 
@@ -19,7 +19,7 @@ RUN pip install --no-cache-dir --upgrade pip && \
 
 
 
-FROM python:3.13-slim
+FROM python:3.13.7-slim-trixie
 
 ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
