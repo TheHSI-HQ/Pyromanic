@@ -5,8 +5,7 @@ WORKDIR /app
 ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1
 
-# Install build dependencies
-RUN apk add --no-cache gcc libffi-dev musl-dev
+RUN apk add --no-cache gcc libffi-dev musl-dev postgresql-dev
 
 RUN mkdir /install
 
@@ -26,17 +25,13 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
 
 WORKDIR /app
 
-# Add runtime dependencies if needed (optional)
-RUN apk add --no-cache libffi postgresql-dev
+RUN apk add --no-cache libffi
 
-# Create a non-root user
 RUN adduser -D -h /app pyromanic
 
-# Copy installed packages and app source
 COPY --from=builder /install /install
 COPY --chown=pyromanic:pyromanic . .
 
-# Ensure ownership
 RUN chown -R pyromanic:pyromanic /app
 
 USER pyromanic
