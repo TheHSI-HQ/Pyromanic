@@ -31,7 +31,7 @@ jobs:
 
       - name: Build Docker image
         run: |
-          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/pyromanic:${{ github.sha }} .
+          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/pyromanic:${{ github.sha }} . .
 
       - name: Push Docker image
         run: |
