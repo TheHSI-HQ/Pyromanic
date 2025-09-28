@@ -1,18 +1,9 @@
-name: Build and Publish Docker Image
+name: Build and Publish Docker Image (Tag)
 
 on:
   push:
-    branches: [main]
-    paths:
-      - "Dockerfile"
-      - "app.py"
-      - "libs/**/*.py"
-      - "routes/**/*.py"
-      - "requirements.txt"
-      - "config/**/*.yaml"
-      - "www/**"
-      - "assets/**"
-      - ".github/workflows/docker-publish.yml"
+    tags:
+      - "*"
   workflow_dispatch:
 
 jobs:
@@ -29,10 +20,18 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: Build Docker image
+      - name: Build Docker image (Tag)
         run: |
-          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/pyromanic:${{ github.sha }} .
+          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/pyromanic:${{ github.ref }}
 
-      - name: Push Docker image
+      - name: Build Docker image (Latest)
         run: |
-          docker push ${{ secrets.DOCKERHUB_USERNAME }}/pyromanic:${{ github.sha }}
+          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/pyromanic:latest
+
+      - name: Push Docker image (Tag)
+        run: |
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/pyromanic:${{ github.ref }}
+
+      - name: Push Docker image (Latest)
+        run: |
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/pyromanic:latest

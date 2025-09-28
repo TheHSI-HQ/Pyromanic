@@ -1,0 +1,16 @@
+services:
+  pyromanic:
+    image: thehsi/pyromanic:latest
+    restart: unless-stopped
+    ports:
+      - 0.0.0.0:443:443
+      # - 0.0.0.0:80:80 # Only if you want to use A Proxy in front of Pyromanic
+    volumes:
+      - ./config:/app/config
+    networks:
+      - pyromanic
+
+networks:
+  pyromanic:
+    name: pyromanic
+    external: true
