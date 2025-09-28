@@ -26,6 +26,7 @@ Pyromanic is a quick and simple Reverse Proxy with Authentication
 
 ```bash
 mkdir pyromanic
+cd pyromaniac
 ```
 
 2. Download the `docker-compose.yaml` from the GitHub Repo
