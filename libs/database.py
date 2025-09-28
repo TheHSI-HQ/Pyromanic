@@ -1,6 +1,7 @@
 from sqlalchemy import create_engine, Column, Integer, String, DateTime
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
+from os.path import exists
 
 Base = declarative_base()
 
@@ -54,7 +55,9 @@ class Database:
     def _sqlite(self):
         self.type = "sqlite"
         file = read_config(cfg(), "database.file", str)
-        print(self._parse_password(read_config(cfg(), "database.password", str)))
+        if not exists(file):
+            with open(file, 'w') as f:
+                f.write('')
         self.raw = create_engine(f"sqlite:///{file}", echo=True)
 
     def _mysql(self):

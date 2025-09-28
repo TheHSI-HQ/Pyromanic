@@ -1,7 +1,10 @@
 rcssmin
 rjsmin
 minify-html
+cryptography
 flask
+pillow
+PyYAML
 requests[socks]
 pymysql
 psycopg2-binary

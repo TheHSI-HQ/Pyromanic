@@ -18,6 +18,7 @@ from datetime import datetime
 from ssl import SSLContext, PROTOCOL_TLSv1_2
 from threading import Thread
 import sys, logging
+from time import sleep
 
 cfg = load_reloading_config('pyromanic.yaml')
 
@@ -129,4 +130,7 @@ if __name__ == "__main__":
         Thread(target=https_thread, daemon=True).start()
     if read_config(cfg(), 'http.enabled', bool):
         Thread(target=http_thread, daemon=True).start()
-    input("Press Enter to Stop")
+    while True:
+        if not read_config(cfg(), 'enabled', bool):
+            exit(1)
+        sleep(15)
