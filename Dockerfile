@@ -27,7 +27,7 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
 WORKDIR /app
 
 # Add runtime dependencies if needed (optional)
-RUN apk add --no-cache libffi
+RUN apk add --no-cache libffi postgresql-dev
 
 # Create a non-root user
 RUN adduser -D -h /app pyromanic
