@@ -146,6 +146,30 @@
                 </div>
             </div>
 
+            <div class="entry">
+                <div class="info">
+                    <div class="title">Auth / Rate Limit / Attempts</div>
+                    <div class="path">auth.rate_limit.attempts</div>
+                    <div class="default">3</div>
+                    <div class="description">How many incorrect login attempts before being rate limited</div>
+                </div>
+                <div class="config">
+                    <input type="number" min=0 max=2147483647 value={{ cfg["auth"]["rate_limit"]["attempts"] }} id="cfg-auth.rate_limit.attempts">
+                </div>
+            </div>
+
+            <div class="entry">
+                <div class="info">
+                    <div class="title">Auth / Rate Limit / Remember</div>
+                    <div class="path">auth.rate_limit.remember</div>
+                    <div class="default">60</div>
+                    <div class="description">How long an IP's flags will be remembered for (Seconds)</div>
+                </div>
+                <div class="config">
+                    <input type="number" min=0 max=2147483647 value={{ cfg["auth"]["rate_limit"]["remember"] }} id="cfg-auth.rate_limit.remember">
+                </div>
+            </div>
+
             <hr>
 
             <div class="entry">

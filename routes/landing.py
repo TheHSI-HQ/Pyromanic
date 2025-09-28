@@ -32,6 +32,11 @@ def index():
                 message = "The Username or Password you entered were Incorrect!"
             case "101":
                 message = "Setup has already been Completed!"
+            case "102":
+                if "i" in request.args:
+                    message = "You are Timed Out for %s Seconds" % request.args["i"]
+                else:
+                    message = "You are Timed Out"
             case _:
                 message = ""
     else:

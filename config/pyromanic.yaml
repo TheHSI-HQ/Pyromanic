@@ -10,7 +10,7 @@
 ##
 ## Secrets from secrets.yaml can be accessed using "[[secret_name_here]]"
 ##
-version: v1.0.7
+version: v1.0.8
 ## --- DO NOT MODIFY ABOVE THIS LINE ---
 
 ## Enables Pyromanic [true]
@@ -47,6 +47,14 @@ auth:
 
   ## Application Secret [[application_secret]]
   secret: "[[application_secret]]"
+
+  ## Rate Limit Settings
+  rate_limit:
+    ## How many attempts before being ratelimited [3]
+    attempts: 3
+
+    ## How long to Remember Rate Limit Flags (seconds) [10]
+    remember: 60
 
 ## Debug Settings (Use Defaults in Production)
 debug:
