@@ -10,7 +10,7 @@
 ##
 ## Secrets from secrets.yaml can be accessed using "[[secret_name_here]]"
 ##
-version: v1.0.8
+version: v1.0.9
 ## --- DO NOT MODIFY ABOVE THIS LINE ---
 
 ## Enables Pyromanic [true]
