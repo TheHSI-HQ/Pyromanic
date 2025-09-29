@@ -7,5 +7,4 @@ PyYAML
 requests[socks]
 pymysql
 psycopg2-binary
-
 sqlalchemy
