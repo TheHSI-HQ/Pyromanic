@@ -69,8 +69,8 @@ logging:
   ## Show IPs in Log [true]
   show_ips: true
 
-  ## Log File: PATH | off [off]
-  file: off
+  ## Log File: PATH | none [none]
+  file: none
 
   ## Log to Console [true]
   console: true
@@ -173,7 +173,7 @@ cache:
 
 ## HTTP Settings
 http:
-  ## HTTP Enabled [true]
+  ## HTTP Enabled [false]
   enabled: false
 
   ## HTTP Port [80]
@@ -201,3 +201,4 @@ https:
 
   ## HTTP Host [0.0.0.0]
   host: 0.0.0.0
+
