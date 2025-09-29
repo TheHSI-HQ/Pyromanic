@@ -53,7 +53,7 @@ def log_error(s: str) -> int:
     print(s)
     # if not "Traceback" in s:
     #     return 0
-    if read_config(cfg(), "logging.file", str) != "off":
+    if read_config(cfg(), "logging.file", str) != "none":
         with open(read_config(cfg(), "logging.file", str), 'a') as f:
             return f.write(
                 "[" + datetime.now().strftime("%d/%b/%Y %H:%M:%S") + "]" + s + "\n"
@@ -133,4 +133,5 @@ if __name__ == "__main__":
     while True:
         if not read_config(cfg(), 'enabled', bool):
             exit(1)
+
         sleep(15)
