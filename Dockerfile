@@ -23,7 +23,7 @@ FROM python:3.13.7-alpine3.22
 ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
     PATH="/install/bin:$PATH" \
-    PYTHONPATH="/install/lib/python3.14/site-packages"
+    PYTHONPATH="/install/lib/python3.13/site-packages"
 
 WORKDIR /app
 
