@@ -35,6 +35,26 @@ cd pyromanic
 wget https://raw.githubusercontent.com/thehsi/Pyromanic/refs/heads/master/docker-compose.yaml
 ```
 
+<details>
+
+<summary>File Content</summary>
+
+```yaml
+services:
+  pyromanic:
+    image: thehsi/pyromanic:latest # alt: ghcr.io/TheHSI-HQ/Pyromanic
+    restart: unless-stopped
+    network: host # Recommended
+    # ports:
+    #  - "0.0.0.0:443:443"
+    #  - "0.0.0.0:80:80" # Only use if you add a Proxy infront of Pyromanic
+    volumes:
+      - ./config:/app/config
+      # - ./assets:/app/assets # Not needed but useful for logs, databases or metrics
+```
+
+</details>
+
 3. Create a Config Directory:
 
 ```bash
@@ -59,12 +79,11 @@ nano secrets.yaml
 6. Create the Network and Start the Compose Stack
 
 ```bash
-docker network create pyromanic
 docker compose up -d
 ```
 
 7. Start using Pyromanic by going to
 
 ```url
-https://localhost
+https://<server-ip>
 ```
