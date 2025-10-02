@@ -33,5 +33,11 @@ def setup_account():
 
     auth.create_user(request.form["username"], request.form["password"], "operator")
     resp = make_response(redirect("/"))
-    resp.set_cookie('PYRO-AuthKey', auth.register_cookie(request.form["username"]))
+    resp.set_cookie(
+        'PYRO-AuthKey',
+        auth.register_cookie(request.form["username"]),
+        secure=True,
+        httponly=True,
+        samesite='Strict'
+    )
     return resp
