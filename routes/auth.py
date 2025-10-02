@@ -61,7 +61,7 @@ def letmein():
 
     if authentication.verify_user(request.form["username"], request.form["password"]):
         resp = make_response(redirect(unquote_plus(request.args["url"])) if "url" in request.args else redirect("/"))
-        resp.set_cookie('PYRO-AuthKey', authentication.register_cookie(request.form["username"]))
+        resp.set_cookie('PYRO-AuthKey', authentication.register_cookie(request.form["username"]), secure=True, httponly=True, samesite='Strict')
         return resp
 
     if ip:
