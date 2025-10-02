@@ -32,7 +32,7 @@ cd pyromanic
 2. Download the `docker-compose.yaml` from the GitHub Repo
 
 ```bash
-wget https://raw.githubusercontent.com/hstoreinteractive/Pyromanic/refs/heads/master/docker-compose.yaml
+wget https://raw.githubusercontent.com/thehsi/Pyromanic/refs/heads/master/docker-compose.yaml
 ```
 
 3. Create a Config Directory:
@@ -45,8 +45,8 @@ cd config
 4. Download the Config files from the GitHub Repo
 
 ```bash
-wget https://raw.githubusercontent.com/hstoreinteractive/Pyromanic/refs/heads/master/config/pyromanic.yaml
-wget https://raw.githubusercontent.com/hstoreinteractive/Pyromanic/refs/heads/master/config/secrets.yaml
+wget https://raw.githubusercontent.com/thehsi/Pyromanic/refs/heads/master/config/pyromanic.yaml
+wget https://raw.githubusercontent.com/thehsi/Pyromanic/refs/heads/master/config/secrets.yaml
 ```
 
 5. Edit the Config Files
