@@ -56,9 +56,15 @@ def js_provider(path: str):
 def img_provider(path: str):
     t_path = path.split("-")[0]
     format = path.split("-")[1]
-    if not exists("./www/img/" + t_path + ".yaml"):
+    # Build the intended metadata file path
+    img_root = os.path.abspath("./www/img/")
+    metadata_candidate_path = os.path.normpath(os.path.join("./www/img/", t_path + ".yaml"))
+    metadata_full_path = os.path.abspath(metadata_candidate_path)
+    if not metadata_full_path.startswith(img_root + os.sep):
+        return Response("Forbidden", 403)
+    if not exists(metadata_full_path):
         return "<h1>404 Not Found</h1>", 404
-    with open("./www/img/" + t_path + ".yaml", 'r') as f:
+    with open(metadata_full_path, 'r') as f:
         metadata = safe_load(f.read())
         if "formats" not in metadata or "default" not in metadata:
             return Response("Failed to Read Metadata", 500, mimetype="text/text")
