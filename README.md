@@ -12,7 +12,7 @@
 
 > The Quick Authentication Reverse Proxy
 
-[Website](https://thehsi.cloud/pyromanic/) — [Documentation](/wiki)
+[Website](https://thehsi.cloud/pyromanic/) — [Documentation](https://github.com/TheHSI-HQ/Pyromanic/wiki)
 
 </div>
 
