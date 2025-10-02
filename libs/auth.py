@@ -1,5 +1,6 @@
 from libs.database import Database, AuthCookie, User
 from hashlib import sha256, md5, sha512
+from argon2 import PasswordHasher
 from libs.config import load_reloading_config, read_config
 
 from datetime import datetime, timezone, timedelta
@@ -54,31 +55,23 @@ class Auth:
             sleep(60)
 
     def verify_user(self, username: str, password: str):
-        hashed_password = sha512(
-            md5(
-                sha256(
-                    password.encode()
-                    ).hexdigest().encode()
-                +
-                read_config(cfg(), "auth.secret", str).encode()
-                ).hexdigest().encode()
-            ).hexdigest()
-        users = db.session().query(User).filter(User.name == username).filter(User.password == hashed_password).first()
-        return bool(users)
+        secret = read_config(cfg(), "auth.secret", str)
+        users = db.session().query(User).filter(User.name == username).first()
+        if not users:
+            return False
+        ph = PasswordHasher()
+        try:
+            return ph.verify(users.password, password + secret)
+        except Exception:
+            return False
 
     def count_users(self):
         return len(db.session().query(User).all())
 
     def create_user(self, username: str, password: str, role: str):
-        hashed_password = sha512(
-            md5(
-                sha256(
-                    password.encode()
-                    ).hexdigest().encode()
-                +
-                read_config(cfg(), "auth.secret", str).encode()
-                ).hexdigest().encode()
-            ).hexdigest()
+        secret = read_config(cfg(), "auth.secret", str)
+        ph = PasswordHasher()
+        hashed_password = ph.hash(password + secret)
         user = User(name = username, password = hashed_password, role = role)
         db.session().add(user)
         db.session().commit()

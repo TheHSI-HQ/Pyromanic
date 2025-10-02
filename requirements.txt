@@ -1,4 +1,5 @@
 rcssmin
+argon2-cffi==25.1.0
 rjsmin
 cryptography
 flask
