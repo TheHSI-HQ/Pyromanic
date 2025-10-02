@@ -14,9 +14,14 @@ resources = Blueprint('resources', __name__, template_folder='../www/templates',
 @resources.route("/res/css/<string:path>.css")
 @metrics.measure
 def css_provider(path: str):
-    if not exists("./www/css/" + path + ".css"):
+    css_root = os.path.abspath("./www/css/")
+    candidate_path = os.path.normpath(os.path.join("./www/css/", path + ".css"))
+    candidate_fullpath = os.path.abspath(candidate_path)
+    if not candidate_fullpath.startswith(css_root + os.sep):
+        return Response("Forbidden", 403)
+    if not exists(candidate_fullpath):
         return "<h1>404 Not Found</h1>", 404
-    with open("./www/css/" + path + ".css", 'r') as f:
+    with open(candidate_fullpath, 'r') as f:
         read = f.read()
 
         base = read_config(cfg(), 'app.base_path', str).removesuffix("/")
