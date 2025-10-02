@@ -1,5 +1,5 @@
 from flask import Blueprint, request, redirect
-from urllib.parse import unquote_plus
+from urllib.parse import unquote_plus, urlparse
 from libs.auth import Auth
 from libs.preprocessor import render_template_string
 from libs.config import load_reloading_config, read_config
@@ -22,8 +22,12 @@ def index():
 
     if auth.is_valid_cookie(request.cookies.get("PYRO-AuthKey", type=str)):
         if "url" in request.args:
-            return redirect(unquote_plus(request.args["url"]))
-        return redirect("/")
+            url = unquote_plus(request.args["url"]).replace('\\', '')
+            parsed = urlparse(url)
+            # Only redirect to relative URLs (no netloc, no scheme)
+            if not parsed.netloc and not parsed.scheme:
+                return redirect(url)
+            return redirect("/")
 
     if "c" in request.args:
         code = request.args["c"]
