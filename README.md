@@ -42,7 +42,7 @@ wget https://raw.githubusercontent.com/thehsi/Pyromanic/refs/heads/master/docker
 ```yaml
 services:
   pyromanic:
-    image: thehsi/pyromanic:latest # alt: ghcr.io/TheHSI-HQ/Pyromanic
+    image: thehsi/pyromanic:latest # alt: ghcr.io/TheHSI-HQ/pyromanic
     restart: unless-stopped
     network: host # Recommended
     # ports:
