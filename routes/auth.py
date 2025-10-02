@@ -4,7 +4,7 @@ from libs.config import load_reloading_config, read_config
 from libs.metrics import Metrics
 from datetime import datetime, timezone, timedelta
 
-from urllib.parse import unquote_plus, quote_plus
+from urllib.parse import unquote_plus, quote_plus, urlparse
 
 cfg = load_reloading_config('pyromanic.yaml')
 metrics = Metrics()
@@ -60,7 +60,15 @@ def letmein():
         return jsonify({"error": "bad request"}), 400
 
     if authentication.verify_user(request.form["username"], request.form["password"]):
-        resp = make_response(redirect(unquote_plus(request.args["url"])) if "url" in request.args else redirect("/"))
+        safe_redirect_url = "/"
+        if "url" in request.args:
+            # Validate the user-supplied URL is a relative path (not external)
+            target = unquote_plus(request.args["url"]).replace("\\", "")
+            parsed = urlparse(target)
+            # Only allow redirect if both scheme and netloc are empty
+            if not parsed.scheme and not parsed.netloc:
+                safe_redirect_url = target
+        resp = make_response(redirect(safe_redirect_url))
         resp.set_cookie('PYRO-AuthKey', authentication.register_cookie(request.form["username"]), secure=True, httponly=True, samesite='Strict')
         return resp
 
