@@ -1,4 +1,6 @@
 name: Build and Publish Docker Image (Tag)
+permissions:
+  contents: read
 
 on:
   push:
