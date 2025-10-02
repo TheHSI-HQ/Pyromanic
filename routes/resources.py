@@ -34,9 +34,14 @@ def css_provider(path: str):
 @resources.route("/res/js/<string:path>.js")
 @metrics.measure
 def js_provider(path: str):
-    if not exists("./www/js/" + path + ".js"):
+    js_root = os.path.abspath("./www/js/")
+    candidate_path = os.path.normpath(os.path.join("./www/js/", path + ".js"))
+    candidate_fullpath = os.path.abspath(candidate_path)
+    if not candidate_fullpath.startswith(js_root + os.sep):
+        return Response("Forbidden", 403)
+    if not exists(candidate_fullpath):
         return "<h1>404 Not Found</h1>", 404
-    with open("./www/js/" + path + ".js", 'r') as f:
+    with open(candidate_fullpath, 'r') as f:
         read = f.read()
 
         base = read_config(cfg(), 'app.base_path', str).removesuffix("/")
