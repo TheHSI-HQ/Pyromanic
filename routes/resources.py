@@ -5,7 +5,7 @@ from libs.metrics import Metrics
 from libs.config import load_reloading_config, read_config
 from yaml import safe_load
 from os.path import exists
-
+import os
 cfg = load_reloading_config('pyromanic.yaml')
 metrics = Metrics()
 
@@ -64,8 +64,17 @@ def img_provider(path: str):
             return Response("Failed to Read Metadata", 500, mimetype="text/text")
         formats = metadata["formats"]
         default = metadata["default"]
+        img_root = os.path.abspath("./www/img/")
         if format in formats:
-            return send_file("./www/img/" + t_path + "/" + formats[format])
+            candidate_path = os.path.normpath(os.path.join("./www/img/", t_path, formats[format]))
+            candidate_fullpath = os.path.abspath(candidate_path)
+            if not candidate_fullpath.startswith(img_root + os.sep):
+                return Response("Forbidden", 403)
+            return send_file(candidate_fullpath)
         else:
-            return send_file("./www/img/" + t_path + "/" + formats[default])
+            candidate_path = os.path.normpath(os.path.join("./www/img/", t_path, formats[default]))
+            candidate_fullpath = os.path.abspath(candidate_path)
+            if not candidate_fullpath.startswith(img_root + os.sep):
+                return Response("Forbidden", 403)
+            return send_file(candidate_fullpath)
     return Response("Failed to Compile CSS", 500, mimetype="text/text")
