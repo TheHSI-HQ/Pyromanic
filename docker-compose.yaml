@@ -1,16 +1,11 @@
 services:
   pyromanic:
-    image: thehsi/pyromanic:latest
+    image: thehsi/pyromanic:latest # alt: ghcr.io/TheHSI-HQ/Pyromanic
     restart: unless-stopped
-    ports:
-      - 0.0.0.0:443:443
-      # - 0.0.0.0:80:80 # Only if you want to use A Proxy in front of Pyromanic
+    network: host # Recommended
+    # ports:
+    #  - "0.0.0.0:443:443"
+    #  - "0.0.0.0:80:80" # Only use if you add a Proxy infront of Pyromanic
     volumes:
       - ./config:/app/config
-    networks:
-      - pyromanic
-
-networks:
-  pyromanic:
-    name: pyromanic
-    external: true
+      # - ./assets:/app/assets # Not needed but useful for logs, databases or metrics
