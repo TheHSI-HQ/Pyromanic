@@ -42,12 +42,12 @@ jobs:
           # Tag for GHCR commit
           docker tag \
             ${{ secrets.DOCKERHUB_USERNAME }}/pyromanic:${{ github.sha }} \
-            ghcr.io/${{ github.repository_owner }}/pyromanic:${{ github.sha }}
+            ghcr.io/thehsi-hq/pyromanic:${{ github.sha }}
 
           # Tag for GHCR latest
           docker tag \
             ${{ secrets.DOCKERHUB_USERNAME }}/pyromanic:${{ github.sha }} \
-            ghcr.io/${{ github.repository_owner }}/pyromanic:latest
+            ghcr.io/thehsi-hq/pyromanic:latest
 
       - name: Push Docker image to Docker Hub
         run: |
@@ -56,5 +56,5 @@ jobs:
 
       - name: Push Docker image to GitHub Container Registry
         run: |
-          docker push ghcr.io/${{ github.repository_owner }}/pyromanic:${{ github.sha }}
-          docker push ghcr.io/${{ github.repository_owner }}/pyromanic:latest
+          docker push ghcr.io/thehsi-hq/pyromanic:${{ github.sha }}
+          docker push ghcr.io/thehsi-hq/pyromanic:latest
