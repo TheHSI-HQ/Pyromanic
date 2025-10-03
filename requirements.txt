@@ -3,11 +3,9 @@ argon2-cffi==25.1.0
 rjsmin
 cryptography
 flask
-pillow==10.3.0
+pillow
 PyYAML
 requests[socks]
 pymysql
 psycopg2-binary
 sqlalchemy
-
-
