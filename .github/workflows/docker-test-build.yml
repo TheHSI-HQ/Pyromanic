@@ -2,10 +2,27 @@ name: Test Build Docker Image Build (Commit)
 
 on:
   push:
-    branches: [main]
+    branches: [master]
     paths:
       - "Dockerfile"
+      - "app.py"
+      - "libs/**/*.py"
+      - "routes/**/*.py"
       - "requirements.txt"
+      - "config/**/*.yaml"
+      - "www/**"
+      - "assets/**"
+  pull_request:
+    branches: [master]
+    paths:
+      - "Dockerfile"
+      - "app.py"
+      - "libs/**/*.py"
+      - "routes/**/*.py"
+      - "requirements.txt"
+      - "config/**/*.yaml"
+      - "www/**"
+      - "assets/**"
   workflow_dispatch:
 
 permissions:
@@ -20,4 +37,4 @@ jobs:
 
       - name: Build Docker image
         run: |
-          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/pyromanic:${{ github.sha }} . .
+          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/pyromanic:${{ github.sha }} .
