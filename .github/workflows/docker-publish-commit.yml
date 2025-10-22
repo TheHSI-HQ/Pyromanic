@@ -2,7 +2,7 @@ name: Build and Publish Docker Image (Commit)
 
 on:
   push:
-    branches: [main]
+    branches: [master]
     paths:
       - "Dockerfile"
       - "app.py"
@@ -12,7 +12,6 @@ on:
       - "config/**/*.yaml"
       - "www/**"
       - "assets/**"
-      - ".github/workflows/docker-publish.yml"
   workflow_dispatch:
 
 permissions:
@@ -33,7 +32,7 @@ jobs:
 
       - name: Build Docker image
         run: |
-          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/pyromanic:${{ github.sha }} . .
+          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/pyromanic:${{ github.sha }} .
 
       - name: Push Docker image
         run: |
