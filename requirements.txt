@@ -1,5 +1,4 @@
 rcssmin
-argon2-cffi==25.1.0
 rjsmin
 cryptography
 flask
@@ -9,3 +8,4 @@ requests[socks]
 pymysql
 psycopg2-binary
 sqlalchemy
+
