@@ -20,6 +20,9 @@ RUN pip install --no-cache-dir --upgrade pip && \
 
 FROM python:3.14.0-alpine3.22
 
+RUN apk update && \
+    apk add --no-cache gcc
+
 ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
     PATH="/install/bin:$PATH" \
