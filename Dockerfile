@@ -6,7 +6,7 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1
 
 RUN apk update && \
-    apk add --no-cache gcc libffi-dev musl-dev postgresql-dev && \
+    apk add --no-cache g++ gcc musl-dev libffi-dev postgresql-dev && \
     apk upgrade busybox
 
 RUN mkdir /install
