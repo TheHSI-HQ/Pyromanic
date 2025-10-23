@@ -40,6 +40,6 @@ jobs:
         run: |
           docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/pyromanic:${{ github.sha }} .
 
-      - name: Test Docker image startup
+      - name: Test Docker Image Startup and Dependencie Installation
         run: |
-          docker run --rm ${{ secrets.DOCKERHUB_USERNAME }}/pyromanic:${{ github.sha }} python3 --version
+          docker run --rm ${{ secrets.DOCKERHUB_USERNAME }}/pyromanic:${{ github.sha }} python -m flask --version
