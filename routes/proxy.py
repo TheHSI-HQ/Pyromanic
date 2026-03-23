@@ -142,6 +142,8 @@ def proxy_path(_flagExternal: Callable[[], None], _flagInternal: Callable[[], No
     else:
         proxies=dict(http=read_config(cfg(), 'proxy.proxy.http', str),
                     https=read_config(cfg(), 'proxy.proxy.https', str))
+    if not target_url.startswith("https://") and not target_url.startswith("http://"):
+        raise ValueError("URL must start with http:// or https://")
     _flagExternal()
     resp = rrequest(
         method=request.method,
