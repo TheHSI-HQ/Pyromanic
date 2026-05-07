@@ -8,4 +8,4 @@ requests[socks]
 pymysql
 psycopg2-binary
 sqlalchemy
-urllib3>=2.6.3
+urllib3>=2.7.0
