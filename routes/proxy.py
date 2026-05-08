@@ -31,7 +31,10 @@ def add_additional_data(target_url: str, headers: dict[str, str], cookies: dict[
                         target_url += "?" + additional_data["key"] + "=" + additional_data["value"] # pyright: ignore[reportUnknownVariableType]
                 case _: # pyright: ignore[reportUnknownVariableType]
                     raise ValueError("Cannot compute Additional Data")
-    headers["Cookie"] = '; '.join([x+"="+cookies[x] for x in cookies])
+    headers["Cookie"] = '; '.join([
+        quote_plus(str(x), safe='') + "=" + quote_plus(str(cookies[x]), safe='')
+        for x in cookies
+    ])
     return (target_url, headers, cookies) # pyright: ignore[reportUnknownVariableType]
 
 def fetch_client_ip(target_url: str) -> tuple[str, str]:
@@ -94,7 +97,7 @@ def decompress_stream(stream: Iterator[Any], encoding: str):
 
 def proxy_path(_flagExternal: Callable[[], None], _flagInternal: Callable[[], None]):
     if request.cookies.get("PYRO-AuthKey", type=str) is None:
-        if request.accept_mimetypes == "application/json":
+        if request.accept_mimetypes.best_match(["application/json"]) == "application/json":
             return {"error": "You are not authenticated with Pyromanic"}, 401
 
         if request.content_type == "application/json":
@@ -104,7 +107,7 @@ def proxy_path(_flagExternal: Callable[[], None], _flagInternal: Callable[[], No
         return redirect(base + "?url=" + quote_plus(request.full_path))
 
     if not Auth().is_valid_cookie(request.cookies.get("PYRO-AuthKey", type=str)):
-        if request.accept_mimetypes == "application/json":
+        if request.accept_mimetypes.best_match(["application/json"]) == "application/json":
             return {"error": "You are not authenticated with Pyromanic"}, 401
 
         if request.content_type == "application/json":
