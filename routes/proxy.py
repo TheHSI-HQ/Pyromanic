@@ -94,7 +94,7 @@ def decompress_stream(stream: Iterator[Any], encoding: str):
 
 def proxy_path(_flagExternal: Callable[[], None], _flagInternal: Callable[[], None]):
     if request.cookies.get("PYRO-AuthKey", type=str) is None:
-        if request.accept_mimetypes == "application/json":
+        if request.accept_mimetypes.best_match(["application/json"]) == "application/json":
             return {"error": "You are not authenticated with Pyromanic"}, 401
 
         if request.content_type == "application/json":
@@ -104,7 +104,7 @@ def proxy_path(_flagExternal: Callable[[], None], _flagInternal: Callable[[], No
         return redirect(base + "?url=" + quote_plus(request.full_path))
 
     if not Auth().is_valid_cookie(request.cookies.get("PYRO-AuthKey", type=str)):
-        if request.accept_mimetypes == "application/json":
+        if request.accept_mimetypes.best_match(["application/json"]) == "application/json":
             return {"error": "You are not authenticated with Pyromanic"}, 401
 
         if request.content_type == "application/json":
